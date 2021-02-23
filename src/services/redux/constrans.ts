@@ -20,4 +20,7 @@ export const SET_INDEX_PLAYING = "SET_INDEX_PLAYING"
 export const SET_SHUFFLE = "SET_SHUFFLE"
 export const SET_REPEAT = "SET_REPEAT"
 
+export const CHANGE_LANGUAGE = "CHANGE_LANGUAGE"
+export const LOAD_SETTINGS = "LOAD_SETTINGS"
+
 

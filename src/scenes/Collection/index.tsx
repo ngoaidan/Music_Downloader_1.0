@@ -4,16 +4,14 @@ import Header from '@components/atoms/Header';
 import PopupDelete from '@components/atoms/PopupDelete';
 import PopupRename from '@components/atoms/PopupRename';
 import color from '@config/colors';
-import { COLLECTIONEDIT } from '@config/constrans';
 import stylesGeneral from '@config/stylesGeneral';
-import { useNavigation } from '@react-navigation/native';
-import { loadCollection, setEditMode, showMusicControl, showPopupRename, showTabbar } from '@services/redux/actions';
-import { dboCollection } from '@services/sqlite';
-import { isDuration } from 'moment';
-import React, { Component, useEffect, useState } from 'react';
+import { setEditMode } from '@services/redux/actions';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
+import { trans } from "@services/i18n"
+
 
 const renderItem = ({ item }) => (
     <ItemCollection name={item.name} thumbnail={item.thumbnail != undefined ? item.thumbnail : ''} id={item.id} />
@@ -24,6 +22,7 @@ const Collection = () => {
     const editMode = useSelector((state: any) => state?.editMode)
     const listCollection = useSelector((state: any) => state?.listCollection)
     const showMusic = useSelector((state: any) => state?.showMusic)
+    const language = useSelector((state: any) => state?.settings.language)
     const listCollectionEdit = useSelector((state: any) => state?.listCollectionEdit)
     const [showButtonDone, setShowButtonDone] = useState(false)
     const [showButtonRename, setShowButtonRename] = useState(true)
@@ -59,15 +58,15 @@ const Collection = () => {
         }
     }, [listCollectionEdit])
 
-    useEffect(()=>{
+    useEffect(() => {
         setListDataShow(listCollection)
-    },[listCollection])
+    }, [listCollection])
 
     return (
         <View style={stylesGeneral.container}>
 
             <Header
-                title={editMode? "Edit Collection" : "Collection"}
+                title={editMode ? (trans('edit_collection', language)) : (trans('collection', language))}
                 paddingLeft={16}
                 buttonRight={true}
                 onEdit={() => {
@@ -100,12 +99,12 @@ const Collection = () => {
                 </View>
                 <TextInput
                     style={styles.inputSearch}
-                    placeholder='Search collection'
+                    placeholder={trans('search_collection', language)}
                     placeholderTextColor={color.PLACEHOLDER}
                     selectionColor={color.PLACEHOLDER}
                     multiline={false}
                     numberOfLines={1}
-                    onChangeText={(value)=>{
+                    onChangeText={(value) => {
                         search(value)
                     }}
                 />
@@ -128,7 +127,7 @@ const Collection = () => {
                             onPress={() => {
                                 setShowPopupRename(true)
                             }}>
-                            <Text style={styles.textButtonEdit}>Rename</Text>
+                            <Text style={styles.textButtonEdit}>{trans('rename', language)}</Text>
                         </TouchableOpacity>) : null}
                     <TouchableOpacity
                         style={[stylesGeneral.centerAll, styles.buttonDelete]}
@@ -167,7 +166,7 @@ const styles = StyleSheet.create({
         marginRight: 15,
         flex: 1,
         fontSize: 16,
-        color:color.TITLE
+        color: color.TITLE
     },
     constainList: {
         padding: 8,

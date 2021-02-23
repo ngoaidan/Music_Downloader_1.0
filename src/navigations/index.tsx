@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,DarkTheme  } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { COLLECTIONS, COLLECTIONSTACK, HOME, LISTMUSIC, PLAYMUSIC, SETTINGS, TABNAVIGATION } from '@config/constrans';
 import { Collection, Home, ListMusic, PlayMusic, Settings } from '@scenes';
@@ -9,7 +9,8 @@ import Animated, { Easing } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-community/async-storage';
 import { dboCollection, dboMusic } from '@services/sqlite';
 import { useDispatch } from 'react-redux';
-import { loadCollection, loadMusic } from '@services/redux/actions';
+import { loadCollection, loadMusic, loadSettings } from '@services/redux/actions';
+import storage from '@config/initStorage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -56,6 +57,19 @@ const Navigator = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        storage
+            .load({
+                key: 'settings',
+                autoSync: true,
+            })
+            .then(res => {
+                dispatch(loadSettings(res));
+            })
+            .catch(err => {
+            })
+    }, [])
+
+    useEffect(() => {
         AsyncStorage.getItem('firstOpen').then(res => {
             if (res == null) {
                 AsyncStorage.setItem('firstOpen', 'true')
@@ -97,7 +111,7 @@ const Navigator = () => {
         })
 
         return (
-            <NavigationContainer>
+            <NavigationContainer theme={DarkTheme}>
                 <Stack.Navigator 
                 initialRouteName={TABNAVIGATION}
                  headerMode="none"  
@@ -115,7 +129,7 @@ const Navigator = () => {
     else {
         loadData()
         return (
-            <NavigationContainer>
+            <NavigationContainer theme={DarkTheme}>
                 <Stack.Navigator initialRouteName={TABNAVIGATION} headerMode="none"  >
                     <Stack.Screen name={TABNAVIGATION} component={TabStack}></Stack.Screen>
                 </Stack.Navigator>

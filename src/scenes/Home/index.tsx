@@ -10,13 +10,14 @@ import Clipboard from '@react-native-community/clipboard'
 import { EatBeanLoader } from 'react-native-indicator';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoading } from '@services/redux/actions';
-
+import {trans} from "@services/i18n"
 
 const Home = () => {
     const dispatch = useDispatch();
     const loading = useSelector((state: any) => state?.loading)
-    const [textInputValue, setTextInputValue] = useState('')
+    const language = useSelector((state: any) => state?.settings.language)
 
+    const [textInputValue, setTextInputValue] = useState('')
 
     const fetchCopiedText = async () => {
         const text = await Clipboard.getString();
@@ -25,13 +26,13 @@ const Home = () => {
 
     return (
         <View style={stylesGeneral.container}>
-            <Header title="Download Music" paddingLeft={24} buttonRight={false} />
+            <Header title={trans('download_music',language)} paddingLeft={24} buttonRight={false} />
             <View style={styles.cardView}>
-                <Text style={styles.title}>Add Link</Text>
+                <Text style={styles.title}>{trans('add_link',language)}</Text>
                 <View style={styles.containInput}>
                     <TextInput
                         style={styles.input}
-                        placeholder="https://"
+                        placeholder={trans('input_name',language)}
                         placeholderTextColor={color.PLACEHOLDER}
                         selectionColor={color.PLACEHOLDER}
                         multiline={false}
@@ -64,7 +65,7 @@ const Home = () => {
                 >
                     {loading ?
                         <EatBeanLoader color="#fff" /> :
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: color.TITLE, }}>Download</Text>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: color.TITLE, }}>{trans('download',language)}</Text>
                     }
                 </TouchableOpacity>
             </View>

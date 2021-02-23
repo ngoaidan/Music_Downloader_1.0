@@ -14,6 +14,7 @@ import PopupCreateCollect from '@components/atoms/PopupCreateCollect';
 import {fn_GetRandomID} from '@services/api'
 import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
+import { trans } from '@services/i18n';
 
 const renderItem = ({ item, index }) => (
     <ItemMusic data={item} index={index} />
@@ -34,6 +35,7 @@ const ListMusic = (props) => {
     const editMode = useSelector((state: any) => state?.editMode)
     const [showCreateCollection, setShowCreateCollection] = useState(false)
     const navigation = useNavigation();
+    const language = useSelector((state: any) => state?.settings.language)
 
     useEffect(() => {
         dispatch(showTabbar(true))
@@ -74,7 +76,7 @@ const ListMusic = (props) => {
     return (
         <View style={[stylesGeneral.container]}>
             <Header2
-                title={editMode ? "Edit Music" : `${props.route.params.name} Collection`}
+                title={editMode ? (trans('edit_music',language)) : `${props.route.params.name}`}
                 buttonLeft={editMode ? null : true}
                 buttonDone={showButtonDone}
                 onEdit={() => {
@@ -126,7 +128,7 @@ const ListMusic = (props) => {
                        navigation.navigate(PLAYMUSIC);
                     }}
                 >
-                    <Text style={styles.textButton}>Shuffle Play</Text>
+                    <Text style={styles.textButton}>{trans('shuffle_play',language)}</Text>
                 </TouchableOpacity>) : null}
 
             <View style={[styles.constainList, { paddingBottom: paddingBottomFlatlist }]}>
@@ -141,7 +143,7 @@ const ListMusic = (props) => {
                     <Text
                         style={styles.textButtonEdit}
                         onPress={() => { setShowPopupRename(true) }}
-                    >Rename</Text>
+                    >{trans('rename',language)}</Text>
                 </TouchableOpacity>) : null}
                 <TouchableOpacity
                     style={[stylesGeneral.centerAll, styles.buttonEdit]}
@@ -149,7 +151,7 @@ const ListMusic = (props) => {
                         setShowPopupCollection(true)
                     }}
                 >
-                    <Text style={styles.textButtonEdit}>Move</Text>
+                    <Text style={styles.textButtonEdit}>{trans('move',language)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[stylesGeneral.centerAll, styles.buttonDelete]}

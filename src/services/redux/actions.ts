@@ -19,12 +19,28 @@ import {
     SET_INDEX_PLAYING,
     SET_SHUFFLE,
     SET_REPEAT,
+    CHANGE_LANGUAGE,
+    LOAD_SETTINGS,
 } from './constrans';
 
 export const showMusicControl = (status: boolean) => {
     return {
         type: SHOW_CONTROL_MUSIC,
         payload: status
+    }
+}
+
+export const changeLanguage = (language:string) => {
+    return {
+        type: CHANGE_LANGUAGE,
+        payload: language
+    }
+}
+
+export const loadSettings = (settings:any) => {
+    return {
+        type: LOAD_SETTINGS,
+        payload: settings
     }
 }
 

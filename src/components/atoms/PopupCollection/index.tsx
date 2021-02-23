@@ -9,6 +9,7 @@ import ItemMusic from '../ItemMusic';
 import Search from '../Search';
 import { useSelector, useDispatch } from 'react-redux';
 import { ImageMusicDefault } from '@assets/images';
+import { trans } from '@services/i18n';
 
 
 interface PopupConfig {
@@ -21,6 +22,7 @@ interface PopupConfig {
 const PopupCollection = (props: PopupConfig) => {
     const listCollection = useSelector((state: any) => state?.listCollection)
     const [listDataShow, setListDataShow] = useState<any[]>([])
+    const language = useSelector((state: any) => state?.settings.language)
 
     const renderItem = ({ item }) => (
         <ItemCollectionOnPopup data={item} setVisiable={props.setVisiable} />
@@ -51,7 +53,7 @@ const PopupCollection = (props: PopupConfig) => {
             >
                 <View style={styles.modalView}>
                     <View style={{ height: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={styles.title}>Select collection</Text>
+                        <Text style={styles.title}>{trans('select_collection',language)}</Text>
                         <TouchableOpacity onPress={() => { props.setVisiable(false) }}>
                             <IconClose />
                         </TouchableOpacity>
@@ -92,7 +94,7 @@ const PopupCollection = (props: PopupConfig) => {
                         </View>
                         <TextInput
                             style={styles.inputSearch}
-                            placeholder='Search collection'
+                            placeholder={trans('search_collection',language)}
                             placeholderTextColor={color.PLACEHOLDER}
                             selectionColor={color.PLACEHOLDER}
                             multiline={false}
