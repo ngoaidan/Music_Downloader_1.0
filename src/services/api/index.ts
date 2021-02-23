@@ -7,17 +7,19 @@ import PushNotification from "react-native-push-notification";
 
 
 const API_DOWN = "https://downloader28.banabatech.com/oldtest.php?url=";
+const YT = "https://www.youtube.com/watch?v="
 
 const fn_GetAPI = async (link, dispatch: any) => {
     let json: any = "not working";
-
-    await fetch(API_DOWN + link)
+    let linkVideo = YT + link
+    console.log("🚀 ~ file: index.ts ~ line 15 ~ constfn_GetAPI= ~ linkVideo", linkVideo)
+    
+    await fetch(API_DOWN + linkVideo)
         .then((response) => response.json())
         .then((json) => {
             processButton(json,dispatch)
         })
         .catch(() => {
-
         });
 }
 
@@ -69,7 +71,7 @@ const processButton = (data, dispatch: any) => {
             .begin((expectedBytes) => {
             })
             .progress((percent, bytesWritten, totalBytes) => {
-
+                console.log(percent)
             })
             .done(() => {
                 dboMusic.InsertItem(infoMusic).then(res => {

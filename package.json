@@ -40,7 +40,8 @@
     "react-native-svg": "^12.1.0",
     "react-native-vector-icons": "^8.0.0",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "youtube-api-search": "0.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

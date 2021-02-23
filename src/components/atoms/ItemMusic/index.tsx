@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
 import { isDuration } from 'moment';
 
-const ItemMusic = (item: any,) => {
+const ItemMusic = (item: any) => {
     const navigation = useNavigation();
     const editMode = useSelector((state: any) => state?.editMode)
     const [select, setSelect] = useState(false);
