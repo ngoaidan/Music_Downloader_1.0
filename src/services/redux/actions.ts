@@ -21,6 +21,7 @@ import {
     SET_REPEAT,
     CHANGE_LANGUAGE,
     LOAD_SETTINGS,
+    SHOW_ERROR_INTERNET,
 } from './constrans';
 
 export const showMusicControl = (status: boolean) => {
@@ -144,6 +145,13 @@ export const setCurrentIDCollectionSelect = (id: any) => {
 export const showLoading = (status: any) => {
     return {
         type: SHOW_LOADING,
+        payload: status
+    }
+}
+
+export const showErrorInternet = (status: any) => {
+    return {
+        type: SHOW_ERROR_INTERNET,
         payload: status
     }
 }

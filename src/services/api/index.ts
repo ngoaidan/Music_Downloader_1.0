@@ -1,10 +1,9 @@
-import { loadMusic, showLoading } from './../redux/actions';
+import { loadMusic, showLoading, showErrorInternet } from './../redux/actions';
 import { dboCollection, dboMusic } from '@services/sqlite';
 import RNBackgroundDownloader from 'react-native-background-downloader';
 import moment from 'moment';
 import {  useDispatch } from 'react-redux';
 import PushNotification from "react-native-push-notification";
-
 
 const API_DOWN = "https://downloader28.banabatech.com/oldtest.php?url=";
 const YT = "https://www.youtube.com/watch?v="
@@ -20,6 +19,8 @@ const fn_GetAPI = async (link, dispatch: any) => {
             processButton(json,dispatch)
         })
         .catch(() => {
+            dispatch(showLoading(false))
+            dispatch(showErrorInternet(true))
         });
 }
 
@@ -83,6 +84,8 @@ const processButton = (data, dispatch: any) => {
                 })
             })
             .error((error: any) => {
+                dispatch(showLoading(false))
+                dispatch(showErrorInternet(true))
             })
     }
 }

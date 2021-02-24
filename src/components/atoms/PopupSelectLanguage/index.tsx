@@ -50,9 +50,9 @@ const PopupSelectLanguage = (props: PopupConfig) => {
                             }}>
                             <Text style={{ color: color.TITLE }}>Việt Nam</Text>
                         </TouchableOpacity>
-                        <Line height={1} />
+                        {/* <Line height={1} /> */}
 
-                        <TouchableOpacity style={styles.itemView}>
+                        {/* <TouchableOpacity style={styles.itemView}>
                             <Text style={{ color: color.TITLE }}>English</Text>
                         </TouchableOpacity>
                         <Line height={1} />
@@ -89,7 +89,7 @@ const PopupSelectLanguage = (props: PopupConfig) => {
 
                         <TouchableOpacity style={styles.itemView}>
                             <Text style={{ color: color.TITLE }}>English</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </ScrollView>
                 </View>
 

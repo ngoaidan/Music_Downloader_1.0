@@ -6,7 +6,8 @@ import stylesGeneral from '@config/stylesGeneral';
 import { trans } from '@services/i18n';
 import { changeLanguage } from '@services/redux/actions';
 import React, { Component, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Share } from 'react-native';
+import SendIntentAndroid from 'react-native-send-intent';
 import ShadowView from 'react-native-simple-shadow-view'
 import Svg, { Path } from 'react-native-svg';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,7 +18,24 @@ const Settings = () => {
     const [showPopupChangeLanguage, setShowPopupChangeLanguage] = useState(false)
     const language = useSelector((state: any) => state?.settings.language)
 
-
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                title: '',
+                message: "http://www.tools-app.store/"
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+        }
+    };
     return (
         <View style={stylesGeneral.container}>
             <Header title={trans('settings',language)} paddingLeft={16} />
@@ -30,7 +48,9 @@ const Settings = () => {
                     </View>
                 </View>
                 <View style={styles.line} />
-                <TouchableOpacity style={styles.optionBg}>
+                <TouchableOpacity style={styles.optionBg}
+                   onPress={() => { onShare() }}
+                >
                     <Text style={styles.textOption}>{trans('settings2', language)}</Text>
                     <View style={styles.icon}>
                         <Svg
@@ -44,7 +64,11 @@ const Settings = () => {
                     </View>
                 </TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity style={styles.optionBg}>
+                <TouchableOpacity style={styles.optionBg}
+                onPress={()=>{
+                    SendIntentAndroid.sendMail("duyennguyen0285@gmail.com", "[Feedback][APP-DownloadMusic] ", "");
+                }}
+                >
                     <Text style={styles.textOption}>{trans('settings3', language)}</Text>
                     <View style={styles.icon}>
                         <Svg

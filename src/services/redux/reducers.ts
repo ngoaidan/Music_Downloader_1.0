@@ -22,6 +22,7 @@ import {
     SET_REPEAT,
     CHANGE_LANGUAGE,
     LOAD_SETTINGS,
+    SHOW_ERROR_INTERNET,
 } from './constrans';
 
 var initState = {
@@ -36,6 +37,10 @@ var initState = {
     popupRename: false,
     infoMusicPlaying: [],
     currentIDCollectionSelect: -1,
+    showAlert:{
+        errorInternet: false,
+
+    },
     musicPlaying: {
         listMusic: [],
         indexPlaying: 0
@@ -71,6 +76,15 @@ export const rootReducer = (state: any = initState, action: any) => {
             return {
                 ...state,
                 settings: action.payload
+            }
+        }
+        case SHOW_ERROR_INTERNET:{
+            return {
+                ...state,
+                showAlert: {
+                    ...state.showAlert,
+                    errorInternet: action.payload
+                }
             }
         }
         case SHOW_POPUP_RENAME: {

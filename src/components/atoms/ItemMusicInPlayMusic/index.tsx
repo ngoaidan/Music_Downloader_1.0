@@ -9,7 +9,7 @@ import MusicControl, { Command } from 'react-native-music-control'
 import Sound from 'react-native-sound'
 import ControlMusic from '../ControlMusic';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItemMusicEdit, removeItemMusicEdit, setInfoMusicPlaying, setSound, setSoundStatus, showMusicControl } from '@services/redux/actions';
+import { addItemMusicEdit, removeItemMusicEdit, setIndexPlaying, setInfoMusicPlaying, setSound, setSoundStatus, showMusicControl } from '@services/redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
 
@@ -23,6 +23,7 @@ const ItemMusicInPlayMusic = (item: any) => {
             style={[styles.constain]} activeOpacity={0.5}
             onPress={() => {
                 dispatch(showMusicControl(true))
+                dispatch(setIndexPlaying(item.index))
                 dispatch(setInfoMusicPlaying(item.data))
             }}
         >

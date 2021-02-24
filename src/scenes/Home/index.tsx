@@ -4,16 +4,16 @@ import stylesGeneral from '@config/stylesGeneral';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Keyboard, Image } from 'react-native';
 import { FlatList, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { IconPaste } from '@assets/svg'
+import { IconCheck, IconError, IconPaste } from '@assets/svg'
 import { fn_GetAPI, fn_PushNotification } from '@services/api';
 import Clipboard from '@react-native-community/clipboard'
 import { EatBeanLoader } from 'react-native-indicator';
 import { useSelector, useDispatch } from 'react-redux';
-import { showLoading } from '@services/redux/actions';
+import { showErrorInternet, showLoading } from '@services/redux/actions';
 import { trans } from "@services/i18n"
 import ItemMusic from '@components/atoms/ItemMusic';
 import ItemMusicSearch from '@components/atoms/ItemMusicSearch';
-import YTSearch from 'youtube-api-search'
+import YTSearch from '@services/api/youtubeSearch'
 import { ImageMusicDefault } from '@assets/images';
 import metric from '@config/metrics';
 
@@ -21,6 +21,8 @@ const Home = () => {
     const dispatch = useDispatch();
     const loading = useSelector((state: any) => state?.loading)
     const language = useSelector((state: any) => state?.settings.language)
+    const errorInternet = useSelector((state: any) => state?.showAlert.errorInternet)
+
     const [visiableButtonDownload, setVisiableButtonDownload] = useState(true)
     const [textInputValue, setTextInputValue] = useState('')
     const [videoSelect, setVideoSelect] = useState<any>()
@@ -34,7 +36,15 @@ const Home = () => {
 
     const videoSearch = (term) => {
         YTSearch({ key: 'AIzaSyA16Oe_4HaJK0LKfwZWCxO0IqxhBfAg-Mo', term: term }, (videos) => {
-            setListData(videos)
+            if(videos == "error"){
+                dispatch(showErrorInternet(true))
+                setTimeout(()=>{
+                    dispatch(showErrorInternet(false))
+                },10000)
+            }
+            else{
+                setListData(videos)
+            }
         })
     }
 
@@ -53,7 +63,6 @@ const Home = () => {
         <View style={stylesGeneral.container}>
             <Header title={trans('download_music', language)} paddingLeft={24} buttonRight={false} />
             <View style={[styles.cardView, { height: visiableButtonDownload ? (videoSelect != undefined ? 302 : 156) : 354 }]}>
-                {/* <Text style={styles.title}>{trans('add_link', language)}</Text> */}
                 <View style={styles.containInput}>
                     <TextInput
                         textAlignVertical={'center'}
@@ -133,12 +142,15 @@ const Home = () => {
                         />
                     </View>)}
             </View>
-            {/* <View style={{ position: 'absolute', bottom: 0, height: 40, width: metric.DEVICE_WIDTH, marginBottom: 12 }}>
-                <View style={{ flex: 1, marginHorizontal: 40, backgroundColor: color.BG_TOAST_ERROR, borderRadius: 20, alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16 }}>
-                    <IconCheck color={color.WHITE} />
-                    <Text style={{ fontSize: 13, color: color.TITLE, marginLeft: 12 }}>Unable to connect to the internet</Text>
+            {errorInternet ? (
+                <View style={{ position: 'absolute', bottom: 0, height: 40, width: metric.DEVICE_WIDTH, marginBottom: 12 }}>
+                    <View style={{ flex: 1, marginHorizontal: 40, backgroundColor: color.BG_TOAST_ERROR, borderRadius: 20, alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16 }}>
+                        <IconError color={color.WHITE} />
+                        <Text style={{ fontSize: 13, color: color.TITLE, marginLeft: 12 }}>Unable to connect to the internet</Text>
+                    </View>
                 </View>
-            </View> */}
+            ) : null}
+
         </View>
     )
 }
