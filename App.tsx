@@ -10,6 +10,7 @@ import PopupCollection from '@components/atoms/PopupCollection';
 import PopupCreateCollect from '@components/atoms/PopupCreateCollect';
 import SQLite from "react-native-sqlite-storage";
 import { useSelector, useDispatch } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const App = () => {
   LogBox.ignoreLogs(['Warning: ...'])
@@ -21,6 +22,7 @@ const App = () => {
     <Provider store={store}>
       <StatusBar backgroundColor={color.BG_All} />
       <Navigator />
+    
     </Provider>
   );
 };

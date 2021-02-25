@@ -113,7 +113,7 @@ const Navigator = () => {
         })
 
         return (
-            <NavigationContainer theme={DarkTheme}>
+            <NavigationContainer theme={DarkTheme} >
                 <Stack.Navigator 
                 initialRouteName={TABNAVIGATION}
                  headerMode="none"  
