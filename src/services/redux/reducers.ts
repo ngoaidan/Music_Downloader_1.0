@@ -23,6 +23,8 @@ import {
     CHANGE_LANGUAGE,
     LOAD_SETTINGS,
     SHOW_ERROR_INTERNET,
+    SET_TASK_DOWNLOADING,
+    SET_PERCENT,
 } from './constrans';
 
 var initState = {
@@ -39,7 +41,6 @@ var initState = {
     currentIDCollectionSelect: -1,
     showAlert:{
         errorInternet: false,
-
     },
     musicPlaying: {
         listMusic: [],
@@ -49,7 +50,8 @@ var initState = {
     repeat: 0,
     settings: {
         language: 'en'
-    }
+    },
+    taskDownloading:undefined
 };
 
 export const rootReducer = (state: any = initState, action: any) => {
@@ -70,6 +72,22 @@ export const rootReducer = (state: any = initState, action: any) => {
                     ...state.settings,
                     language: action.payload
                 }
+            }
+        }
+        case SET_PERCENT:{
+            return {
+                ...state,
+                taskDownloading:{
+                    ...state.taskDownloading,
+                    percent:action.payload
+                }
+            }
+        }
+        case SET_TASK_DOWNLOADING:{
+            console.log('set task')
+            return {
+                ...state,
+                taskDownloading: action.payload
             }
         }
         case LOAD_SETTINGS: {

@@ -26,6 +26,7 @@ export default {
     popup_create_coll_subtitle: 'Nhập tên mới:',
     shuffle_play:'Ngẫu nhiên',
     move:'Di chuyển',
-    settings:'Cài đặt'
+    settings:'Cài đặt',
+    search:'Tìm'
 
 }

@@ -1,8 +1,8 @@
-import { loadMusic, showLoading, showErrorInternet } from './../redux/actions';
+import { loadMusic, showLoading, showErrorInternet, setTaskDownloading, setPercent } from './../redux/actions';
 import { dboCollection, dboMusic } from '@services/sqlite';
 import RNBackgroundDownloader from 'react-native-background-downloader';
 import moment from 'moment';
-import {  useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PushNotification from "react-native-push-notification";
 
 const API_DOWN = "https://downloader28.banabatech.com/oldtest.php?url=";
@@ -11,8 +11,7 @@ const YT = "https://www.youtube.com/watch?v="
 const fn_GetAPI = async (link, dispatch: any) => {
     let json: any = "not working";
     let linkVideo = YT + link
-    console.log("🚀 ~ file: index.ts ~ line 15 ~ constfn_GetAPI= ~ linkVideo", linkVideo)
-    
+
     await fetch(API_DOWN + linkVideo)
         .then((response) => response.json())
         .then((json) => {
@@ -22,6 +21,17 @@ const fn_GetAPI = async (link, dispatch: any) => {
             dispatch(showLoading(false))
             dispatch(showErrorInternet(true))
         });
+
+    // await fetch(API_DOWN + link)
+    //     .then((response) => response.json())
+    //     .then((json) => {
+    //         console.log("🚀 ~ file: index.ts ~ line 28 ~ .then ~ json", json)
+    //         processButton(json, dispatch)
+    //     })
+    //     .catch(() => {
+    //         dispatch(showLoading(false))
+    //         dispatch(showErrorInternet(true))
+    //     });
 }
 
 /**
@@ -31,6 +41,12 @@ const fn_GetAPI = async (link, dispatch: any) => {
  */
 export const fn_GetRandomID = (max) => {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+let task;
+
+const fn_stop = () => {
+    task.stop();
 }
 
 const processButton = (data, dispatch: any) => {
@@ -62,7 +78,7 @@ const processButton = (data, dispatch: any) => {
             path: path
         }
 
-        RNBackgroundDownloader
+        task = RNBackgroundDownloader
             .download({
                 id: id.toString(),
                 url: url,
@@ -70,17 +86,25 @@ const processButton = (data, dispatch: any) => {
                 priority: 1,
             })
             .begin((expectedBytes) => {
+                dispatch(setTaskDownloading(task))
+
             })
             .progress((percent, bytesWritten, totalBytes) => {
-                console.log(percent)
+                dispatch(setPercent(percent))
             })
-            .done(() => {
-                dboMusic.InsertItem(infoMusic).then(res => {
-                    dboMusic.SelectAll().then((res) => {
+            .done(async () => {
+                dispatch(setTaskDownloading(task))
+                dispatch(showLoading(false))
+                await dboMusic.InsertItem(infoMusic).then(async res => {
+                    console.log("🚀 ~ file: index.ts ~ line 99 ~ dboMusic.InsertItem ~ res", res)
+
+                    await dboMusic.SelectAll().then((res) => {
                         dispatch(loadMusic(res))
                         dispatch(showLoading(false))
                         fn_PushNotification("Finished downloading", `The video ${title} has finished downloading`)
                     })
+                }).catch((err) => {
+                    console.log("🚀 ~ file: index.ts ~ line 99 ~ dboMusic.InsertItem ~ res", err)
                 })
             })
             .error((error: any) => {
@@ -120,4 +144,4 @@ const fn_PushNotification = (title, message) => {
     });
 }
 
-export { fn_GetAPI,fn_PushNotification }
+export { fn_GetAPI, fn_PushNotification, fn_stop }

@@ -96,6 +96,8 @@ const Navigator = () => {
     else if (firstLoad == true) {
         let task1 = dboCollection.CreateTable().then((res: any) => {
         })
+        let task4 = dboMusic.CreateTable().then((res: any) => {
+        })
         let task2 = dboCollection.InsertItem({ name: "Download", thumbnail: "" }).then((res: any) => {
             if (res.status == 200) {
                 console.log('Insert collection success')
@@ -106,7 +108,7 @@ const Navigator = () => {
                 console.log('Insert collection success')
             }
         })
-        Promise.all([task1, task2, task3]).then(() => {
+        Promise.all([task1, task2, task3,task4]).then(() => {
             loadData()
         })
 

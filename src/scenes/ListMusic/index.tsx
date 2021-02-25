@@ -11,7 +11,7 @@ import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import PopupCreateCollect from '@components/atoms/PopupCreateCollect';
-import {fn_GetRandomID} from '@services/api'
+import { fn_GetRandomID } from '@services/api'
 import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
 import { trans } from '@services/i18n';
@@ -76,7 +76,7 @@ const ListMusic = (props) => {
     return (
         <View style={[stylesGeneral.container]}>
             <Header2
-                title={editMode ? (trans('edit_music',language)) : `${props.route.params.name}`}
+                title={editMode ? (trans('edit_music', language)) : `${props.route.params.name}`}
                 buttonLeft={editMode ? null : true}
                 buttonDone={showButtonDone}
                 onEdit={() => {
@@ -119,16 +119,18 @@ const ListMusic = (props) => {
             {!editMode ? (
                 <TouchableOpacity
                     style={[styles.button, stylesGeneral.centerAll]}
-                    onPress={()=>{
-                       let indexRandom = fn_GetRandomID(listData.length-1)
-                       dispatch(showMusicControl(true))
-                       dispatch(setShuffle(true))
-                       dispatch(setInfoMusicPlaying(listData[indexRandom]))
-                       dispatch(setIndexPlaying(indexRandom))
-                       navigation.navigate(PLAYMUSIC);
+                    onPress={() => {
+                        if (listData.length > 0) {
+                            let indexRandom = fn_GetRandomID(listData.length - 1)
+                            dispatch(showMusicControl(true))
+                            dispatch(setShuffle(true))
+                            dispatch(setInfoMusicPlaying(listData[indexRandom]))
+                            dispatch(setIndexPlaying(indexRandom))
+                            navigation.navigate(PLAYMUSIC);
+                        }
                     }}
                 >
-                    <Text style={styles.textButton}>{trans('shuffle_play',language)}</Text>
+                    <Text style={styles.textButton}>{trans('shuffle_play', language)}</Text>
                 </TouchableOpacity>) : null}
 
             <View style={[styles.constainList, { paddingBottom: paddingBottomFlatlist }]}>
@@ -143,7 +145,7 @@ const ListMusic = (props) => {
                     <Text
                         style={styles.textButtonEdit}
                         onPress={() => { setShowPopupRename(true) }}
-                    >{trans('rename',language)}</Text>
+                    >{trans('rename', language)}</Text>
                 </TouchableOpacity>) : null}
                 <TouchableOpacity
                     style={[stylesGeneral.centerAll, styles.buttonEdit]}
@@ -151,7 +153,7 @@ const ListMusic = (props) => {
                         setShowPopupCollection(true)
                     }}
                 >
-                    <Text style={styles.textButtonEdit}>{trans('move',language)}</Text>
+                    <Text style={styles.textButtonEdit}>{trans('move', language)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[stylesGeneral.centerAll, styles.buttonDelete]}

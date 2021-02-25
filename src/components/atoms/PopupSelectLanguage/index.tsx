@@ -30,7 +30,7 @@ const PopupSelectLanguage = (props: PopupConfig) => {
                 activeOpacity={1}
             >
                 <View style={styles.modalView}>
-                    <Text style={styles.title}>{trans('change_language',language)}</Text>
+                    <Text style={styles.title}>{trans('change_language', language)}</Text>
                     <ScrollView style={styles.scrollView}>
                         <TouchableOpacity
                             style={styles.itemView}
@@ -50,46 +50,104 @@ const PopupSelectLanguage = (props: PopupConfig) => {
                             }}>
                             <Text style={{ color: color.TITLE }}>Việt Nam</Text>
                         </TouchableOpacity>
-                        {/* <Line height={1} /> */}
+                        <Line height={1} />
 
-                        {/* <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('ko'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>한국어</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('hi'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>हिन्दी</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('de'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>Deutsche</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('es'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>Spanish</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('pt'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>Portuguese</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('ja'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>Japanese</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('fr'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>French</Text>
                         </TouchableOpacity>
                         <Line height={1} />
 
-                        <TouchableOpacity style={styles.itemView}>
-                            <Text style={{ color: color.TITLE }}>English</Text>
-                        </TouchableOpacity> */}
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('it'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>Italia</Text>
+                        </TouchableOpacity>
+                        <Line height={1} />
+
+                        <TouchableOpacity
+                            style={styles.itemView}
+                            onPress={() => {
+                                dispatch(changeLanguage('ru'))
+                                props.setVisiable(false);
+                            }}
+                        >
+                            <Text style={{ color: color.TITLE }}>Russia</Text>
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
 

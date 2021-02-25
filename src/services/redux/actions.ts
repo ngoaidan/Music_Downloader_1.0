@@ -22,12 +22,21 @@ import {
     CHANGE_LANGUAGE,
     LOAD_SETTINGS,
     SHOW_ERROR_INTERNET,
+    SET_TASK_DOWNLOADING,
+    SET_PERCENT,
 } from './constrans';
 
 export const showMusicControl = (status: boolean) => {
     return {
         type: SHOW_CONTROL_MUSIC,
         payload: status
+    }
+}
+
+export const setTaskDownloading = (task:any) => {
+    return {
+        type: SET_TASK_DOWNLOADING,
+        payload: task
     }
 }
 
@@ -42,6 +51,13 @@ export const loadSettings = (settings:any) => {
     return {
         type: LOAD_SETTINGS,
         payload: settings
+    }
+}
+
+export const setPercent = (percent) => {
+    return {
+        type: SET_PERCENT,
+        payload: percent
     }
 }
 

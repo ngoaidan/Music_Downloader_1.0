@@ -26,5 +26,6 @@ export default {
     popup_create_coll_subtitle: 'Please enter the name:',
     shuffle_play:'Shuffle Play',
     move:'Move',
-    settings:'Settings'
+    settings:'Settings',
+    search:'Search'
 }
