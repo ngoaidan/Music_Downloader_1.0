@@ -114,7 +114,7 @@ const Home = () => {
                             <TouchableOpacity
                                 style={[stylesGeneral.centerAll, styles.button]}
                                 onPress={() => {
-                                    // if (!loading) {
+                                   
                                     // download
                                     if (videoSelect != null) {
                                         Keyboard.dismiss()
@@ -130,13 +130,8 @@ const Home = () => {
                                         videoSearch(textInputValue)
                                         setVisiableButtonDownload(false)
                                     }
-                                    // }
-                                    // else{
-                                    //     setShowAlertProcessing(true)
-                                    //     setTimeout(()=>{
-                                    //         setShowAlertProcessing(false)
-                                    //     },5000)
-                                    // }
+                                   
+                                  
                                     // if (!loading) {
                                     //     Keyboard.dismiss()
                                     //     if (textInputValue != '') {
@@ -174,7 +169,12 @@ const Home = () => {
                                 <TouchableOpacity
                                     style={[styles.buttonCancle]}
                                     onPress={() => {
-                                        fn_stop()
+                                        try{
+                                            fn_stop()
+                                        }
+                                        catch{
+
+                                        }
                                         dispatch(showLoading(false))
                                         dispatch(setTaskDownloading(null))
 
