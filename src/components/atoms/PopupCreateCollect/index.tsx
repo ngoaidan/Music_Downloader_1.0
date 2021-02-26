@@ -1,6 +1,7 @@
 import { IconClose } from '@assets/svg';
 import color from '@config/colors';
 import metric from '@config/metrics';
+import { trans } from '@services/i18n';
 import { loadCollection, loadMusic } from '@services/redux/actions';
 import { dboCollection, dboMusic } from '@services/sqlite';
 import React, { Component, useState } from 'react';
@@ -17,6 +18,7 @@ const PopupCreateCollect = (props: PopupConfig) => {
     const [textInputValue, setTextInputValue] = useState("")
     const listEditMusic = useSelector((state: any) => state?.listEditMusic)
     const dispatch = useDispatch();
+    const language = useSelector((state: any) => state?.settings.language)
 
     return (
         <Modal
@@ -32,10 +34,10 @@ const PopupCreateCollect = (props: PopupConfig) => {
             >
                 <View style={styles.modalView}>
                     <View style={{ height: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={styles.title}>Create Collection</Text>
+                        <Text style={styles.title}>{trans('create_collection', language)}</Text>
                     </View>
                     <View style={{ height: 20, flexDirection: 'row', marginTop: 12, justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={{ fontSize: 16, color: "#8c8c8c" }}>Please enter the name:</Text>
+                        <Text style={{ fontSize: 16, color: "#8c8c8c" }}>{trans('popup_create_coll_subtitle', language)}</Text>
                     </View>
 
                     <TextInput
@@ -53,7 +55,7 @@ const PopupCreateCollect = (props: PopupConfig) => {
                             style={[styles.button, { backgroundColor: color.BG_CARD }]}
                             onPress={() => { props.setVisiable(false) }}
                         >
-                            <Text style={{ fontSize: 16, color: color.TITLE }}>Cancle</Text>
+                            <Text style={{ fontSize: 16, color: color.TITLE }}>{trans('cancle', language)}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.button}
@@ -77,12 +79,10 @@ const PopupCreateCollect = (props: PopupConfig) => {
                                 })
                             }}
                         >
-                            <Text style={{ fontSize: 16, color: color.TITLE }}>Done</Text>
+                            <Text style={{ fontSize: 16, color: color.TITLE }}>{trans('done', language)}</Text>
                         </TouchableOpacity>
-
                     </View>
                 </View>
-
             </TouchableOpacity>
         </Modal>
     );
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        height: metric.DEVICE_HEIGHT,
+        height: metric.DEVICE_HEIGHT+50,
         width: metric.DEVICE_WIDTH
     }
 });

@@ -1,3 +1,4 @@
+import storage from '@config/initStorage';
 import { ListMusic } from '@scenes';
 import {
     HIDDEN_TABBAR,
@@ -18,7 +19,12 @@ import {
     SET_LIST_MUSIC_PLAYING,
     SET_INDEX_PLAYING,
     SET_SHUFFLE,
-    SET_REPEAT
+    SET_REPEAT,
+    CHANGE_LANGUAGE,
+    LOAD_SETTINGS,
+    SHOW_ERROR_INTERNET,
+    SET_TASK_DOWNLOADING,
+    SET_PERCENT,
 } from './constrans';
 
 var initState = {
@@ -33,12 +39,19 @@ var initState = {
     popupRename: false,
     infoMusicPlaying: [],
     currentIDCollectionSelect: -1,
+    showAlert:{
+        errorInternet: false,
+    },
     musicPlaying: {
         listMusic: [],
         indexPlaying: 0
     },
-    shuffle:false,
-    repeat:0
+    shuffle: false,
+    repeat: 0,
+    settings: {
+        language: 'en'
+    },
+    taskDownloading:undefined
 };
 
 export const rootReducer = (state: any = initState, action: any) => {
@@ -47,6 +60,49 @@ export const rootReducer = (state: any = initState, action: any) => {
             return {
                 ...state,
                 showMusic: action.payload
+            }
+        }
+        case CHANGE_LANGUAGE: {
+            let stateTemp = state;
+            stateTemp.settings.language = action.payload
+            updateSettings(stateTemp.settings)
+            return {
+                ...state,
+                settings: {
+                    ...state.settings,
+                    language: action.payload
+                }
+            }
+        }
+        case SET_PERCENT:{
+            return {
+                ...state,
+                taskDownloading:{
+                    ...state.taskDownloading,
+                    percent:action.payload
+                }
+            }
+        }
+        case SET_TASK_DOWNLOADING:{
+            console.log('set task')
+            return {
+                ...state,
+                taskDownloading: action.payload
+            }
+        }
+        case LOAD_SETTINGS: {
+            return {
+                ...state,
+                settings: action.payload
+            }
+        }
+        case SHOW_ERROR_INTERNET:{
+            return {
+                ...state,
+                showAlert: {
+                    ...state.showAlert,
+                    errorInternet: action.payload
+                }
             }
         }
         case SHOW_POPUP_RENAME: {
@@ -158,7 +214,7 @@ export const rootReducer = (state: any = initState, action: any) => {
                 ...state,
                 musicPlaying: {
                     ...state.musicPlaying,
-                    indexPlaying:action.payload
+                    indexPlaying: action.payload
                 }
             }
         }
@@ -166,16 +222,24 @@ export const rootReducer = (state: any = initState, action: any) => {
         case SET_SHUFFLE: {
             return {
                 ...state,
-                shuffle:action.payload
+                shuffle: action.payload
             }
         }
 
         case SET_REPEAT: {
             return {
                 ...state,
-                repeat:action.payload
+                repeat: action.payload
             }
         }
 
     }
+}
+
+const updateSettings = async (settings) => {
+    storage.save({
+        key: "settings",
+        data: settings,
+        expires: null
+    })
 }

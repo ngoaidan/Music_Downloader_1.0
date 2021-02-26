@@ -55,15 +55,12 @@ const InsertItem = (props: MusicTable) => {
 					.then(() => {
 						resolve({ status: 200 })
 					})
-					.catch(() => {
-						CreateTable().then(() => {
-							InsertItem(props)
-						})
-						reject({ status: 500, error: "Error insert database" })
+					.catch((err) => {
+						reject({ status: 500, error: "Error insert database" + err })
 					})
 			})
-			.catch(() => {
-				reject({ status: 500, error: "Error insert database" })
+			.catch((err) => {
+				reject({ status: 500, error: "Error insert database" + err })
 			})
 	})
 }
@@ -82,7 +79,6 @@ const SelectAll = () => {
 							}
 							resolve(data)
 						}).catch(err => {
-							console.log("🚀 ~ file: index.ts ~ line 85 ~ returnnewPromise ~ err", err)
 							reject({ status: 500, error: "Error select database" })
 						})
 				}).catch(err => {
@@ -208,7 +204,7 @@ const DeleteItemByCollectionID = (id_collection: number) => {
 			})
 	})
 
-	return Promise.all([task1,task2])
+	return Promise.all([task1, task2])
 }
 
 

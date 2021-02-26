@@ -1,11 +1,11 @@
-import { IconClose } from '@assets/svg';
 import color from '@config/colors';
 import metric from '@config/metrics';
+import { trans } from '@services/i18n';
 import { loadCollection, loadMusic } from '@services/redux/actions';
 import { dboCollection, dboMusic } from '@services/sqlite';
-import React, { Component, useEffect, useState } from 'react';
-import { View, Modal, StyleSheet, Alert, Text, TouchableOpacity, TextInput } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { View, Modal, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface PopupConfig {
   visiable: boolean,
@@ -17,6 +17,7 @@ interface PopupConfig {
 const PopupRename = (props: PopupConfig) => {
   const [textInputValue, setTextInputValue] = useState(props.data?.name)
   const dispatch = useDispatch()
+  const language = useSelector((state: any) => state?.settings.language)
 
   useEffect(() => {
     setTextInputValue(props.data?.name)
@@ -36,10 +37,10 @@ const PopupRename = (props: PopupConfig) => {
       >
         <View style={styles.modalView}>
           <View style={{ height: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={styles.title}>Rename Collection</Text>
+            <Text style={styles.title}>{trans('rename_collection', language)}</Text>
           </View>
           <View style={{ height: 20, flexDirection: 'row', marginTop: 12, justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, color: "#8c8c8c" }}>Please enter the new name:</Text>
+            <Text style={{ fontSize: 16, color: "#8c8c8c" }}>{trans('popup_rename_subtitle', language)}</Text>
           </View>
 
           <TextInput
@@ -57,7 +58,7 @@ const PopupRename = (props: PopupConfig) => {
               style={[styles.button, { backgroundColor: color.BG_CARD }]}
               onPress={() => { props.setVisiable(false) }}
             >
-              <Text style={{ fontSize: 16, color: color.TITLE }}>Cancle</Text>
+              <Text style={{ fontSize: 16, color: color.TITLE }}>{trans('cancle', language)}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
@@ -81,7 +82,7 @@ const PopupRename = (props: PopupConfig) => {
                 }
               }}
             >
-              <Text style={{ fontSize: 16, color: color.TITLE }}>Done</Text>
+              <Text style={{ fontSize: 16, color: color.TITLE }}>{trans('done', language)}</Text>
             </TouchableOpacity>
 
           </View>

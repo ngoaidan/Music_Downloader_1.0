@@ -16,8 +16,8 @@ import { ImageMusicDefault } from '@assets/images';
 import { play, pause, resume, next, previous } from '@components/atoms/ControlMusic'
 import IconRepeatOne from '@assets/svg/repeat1';
 
-const renderItem = ({ item }) => (
-    <ItemMusicInPlayMusic data={item} />
+const renderItem = ({ item,index }) => (
+    <ItemMusicInPlayMusic data={item} index={index}/>
 );
 
 const PlayMusic = () => {
@@ -79,7 +79,7 @@ const PlayMusic = () => {
 
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => { previous(dispatch, musicPlaying, shuffle) }}>
+                <TouchableOpacity onPress={() => { previous(dispatch, shuffle) }}>
                     <IconSkipForward />
                 </TouchableOpacity>
                 {soundTaskStatus ?
@@ -104,7 +104,7 @@ const PlayMusic = () => {
 
 
                 <TouchableOpacity onPress={() => {
-                    next(dispatch, musicPlaying, shuffle,repeat)
+                    next(dispatch, shuffle)
                 }}>
                     <IconSkipNext />
                 </TouchableOpacity>
@@ -124,7 +124,7 @@ const PlayMusic = () => {
             <View style={{ flex: 3, width: metric.DEVICE_WIDTH, padding: 16 }}>
                 <FlatList
                     data={listDataShow}
-                    renderItem={renderItem}
+                    renderItem={({ item, index }) => renderItem({ item, index })}
                     keyExtractor={item => item.id.toString()}
                 />
             </View>

@@ -1,27 +1,75 @@
 import Header from '@components/atoms/Header';
+import PopupSelectLanguage from '@components/atoms/PopupSelectLanguage';
 import color from '@config/colors';
 import metric from '@config/metrics';
 import stylesGeneral from '@config/stylesGeneral';
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { trans } from '@services/i18n';
+import { changeLanguage } from '@services/redux/actions';
+import React, { Component, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Share } from 'react-native';
+import SendIntentAndroid from 'react-native-send-intent';
 import ShadowView from 'react-native-simple-shadow-view'
 import Svg, { Path } from 'react-native-svg';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const Settings = () => {
+    const dispatch = useDispatch();
+    const [showPopupChangeLanguage, setShowPopupChangeLanguage] = useState(false)
+    const language = useSelector((state: any) => state?.settings.language)
+
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                title: '',
+                message: "http://www.tools-app.store/"
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+        }
+    };
     return (
         <View style={stylesGeneral.container}>
-            <Header title="Settings" paddingLeft={16} />
+            <Header title={trans('settings',language)} paddingLeft={16} />
+            <PopupSelectLanguage setVisiable={setShowPopupChangeLanguage} visiable={showPopupChangeLanguage} />
             <View style={styles.shadowView}>
                 <View style={styles.optionBg}>
-                    <Text style={styles.textOption}>Version</Text>
+                    <Text style={styles.textOption}>{trans('settings1', language)}</Text>
                     <View style={styles.icon}>
                         <Text style={{ color: color.TITLE }}>1.0</Text>
                     </View>
                 </View>
                 <View style={styles.line} />
-                <TouchableOpacity style={styles.optionBg}>
-                    <Text style={styles.textOption}>Share with friends</Text>
+                <TouchableOpacity style={styles.optionBg}
+                   onPress={() => { onShare() }}
+                >
+                    <Text style={styles.textOption}>{trans('settings2', language)}</Text>
+                    <View style={styles.icon}>
+                        <Svg
+                            width="16"
+                            height="16"
+                            fill="#939393"
+                            viewBox="0 0 512.001 512.001"
+                        >
+                            <Path d="M382.678 226.804L163.73 7.86C158.666 2.792 151.906 0 144.698 0s-13.968 2.792-19.032 7.86l-16.124 16.12c-10.492 10.504-10.492 27.576 0 38.064L293.398 245.9l-184.06 184.06c-5.064 5.068-7.86 11.824-7.86 19.028 0 7.212 2.796 13.968 7.86 19.04l16.124 16.116c5.068 5.068 11.824 7.86 19.032 7.86s13.968-2.792 19.032-7.86L382.678 265c5.076-5.084 7.864-11.872 7.848-19.088.016-7.244-2.772-14.028-7.848-19.108z"></Path>
+                        </Svg>
+                    </View>
+                </TouchableOpacity>
+                <View style={styles.line} />
+                <TouchableOpacity style={styles.optionBg}
+                onPress={()=>{
+                    SendIntentAndroid.sendMail("duyennguyen0285@gmail.com", "[Feedback][APP-DownloadMusic] ", "");
+                }}
+                >
+                    <Text style={styles.textOption}>{trans('settings3', language)}</Text>
                     <View style={styles.icon}>
                         <Svg
                             width="16"
@@ -35,7 +83,7 @@ const Settings = () => {
                 </TouchableOpacity>
                 <View style={styles.line} />
                 <TouchableOpacity style={styles.optionBg}>
-                    <Text style={styles.textOption}>Submit Feedback</Text>
+                    <Text style={styles.textOption}>{trans('settings4', language)}</Text>
                     <View style={styles.icon}>
                         <Svg
                             width="16"
@@ -48,8 +96,13 @@ const Settings = () => {
                     </View>
                 </TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity style={styles.optionBg}>
-                    <Text style={styles.textOption}>Platform Support</Text>
+                <TouchableOpacity
+                    style={styles.optionBg}
+                    onPress={() => {
+                        setShowPopupChangeLanguage(true);
+                    }}
+                >
+                    <Text style={styles.textOption}>{trans('settings5', language)}</Text>
                     <View style={styles.icon}>
                         <Svg
                             width="16"
@@ -68,7 +121,7 @@ const Settings = () => {
 
 const styles = StyleSheet.create({
     shadowView: {
-        height: 186,
+        height: 200,
         marginTop: 28,
         borderRadius: 12,
         flexDirection: 'column',

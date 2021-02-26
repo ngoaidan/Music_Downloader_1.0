@@ -6,6 +6,7 @@ import { dboCollection, dboMusic } from '@services/sqlite';
 import React, { Component, useState } from 'react';
 import { View, Modal, StyleSheet, Alert, Text, TouchableOpacity, TextInput, TouchableHighlight } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { trans } from '@services/i18n';
 
 interface PopupConfig {
   visiable: boolean,
@@ -16,6 +17,8 @@ interface PopupConfig {
 
 const PopupDelete = (props: PopupConfig) => {
   const dispatch = useDispatch()
+  const language = useSelector((state: any) => state?.settings.language)
+
 
   return (
     <Modal
@@ -34,10 +37,10 @@ const PopupDelete = (props: PopupConfig) => {
       >
         <View style={styles.modalView}>
           <View style={{ height: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={styles.title}>Delete</Text>
+            <Text style={styles.title}>{trans('delete',language)}</Text>
           </View>
           <View style={{ height: 20, flexDirection: 'row', marginTop: 12, justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, color: "#8c8c8c" }}>Are you sure want to delete?</Text>
+            <Text style={{ fontSize: 16, color: "#8c8c8c" }}>{trans('popup_delete_subtitle',language)}</Text>
           </View>
 
 
@@ -49,7 +52,7 @@ const PopupDelete = (props: PopupConfig) => {
               <Text
                 style={{ fontSize: 16, color: color.TITLE }}
                 onPress={() => { props.setVisiable(false) }}
-              >Cancle</Text>
+              >{trans('cancle',language)}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
@@ -80,7 +83,7 @@ const PopupDelete = (props: PopupConfig) => {
 
               }}
             >
-              <Text style={{ fontSize: 16, color: color.TITLE }}>Done</Text>
+              <Text style={{ fontSize: 16, color: color.TITLE }}>{trans('done',language)}</Text>
             </TouchableOpacity>
 
           </View>
@@ -143,7 +146,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    height: metric.DEVICE_HEIGHT,
+    height: metric.DEVICE_HEIGHT+50,
     width: metric.DEVICE_WIDTH
   }
 });

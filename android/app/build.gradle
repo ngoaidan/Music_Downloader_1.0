@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.baseproject"
+        applicationId "com.btechmusicdownloader"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -9,6 +9,8 @@ import ItemMusic from '../ItemMusic';
 import Search from '../Search';
 import { useSelector, useDispatch } from 'react-redux';
 import { ImageMusicDefault } from '@assets/images';
+import { trans } from '@services/i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 interface PopupConfig {
@@ -21,6 +23,7 @@ interface PopupConfig {
 const PopupCollection = (props: PopupConfig) => {
     const listCollection = useSelector((state: any) => state?.listCollection)
     const [listDataShow, setListDataShow] = useState<any[]>([])
+    const language = useSelector((state: any) => state?.settings.language)
 
     const renderItem = ({ item }) => (
         <ItemCollectionOnPopup data={item} setVisiable={props.setVisiable} />
@@ -38,32 +41,39 @@ const PopupCollection = (props: PopupConfig) => {
         }
     }
 
-    return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={props.visiable}>
-            <View style={styles.constrainOpacity}></View>
-            <TouchableOpacity
-                style={styles.centeredView}
-                onPress={() => { props.setVisiable(false) }}
-                activeOpacity={1}
-            >
-                <View style={styles.modalView}>
-                    <View style={{ height: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={styles.title}>Select collection</Text>
-                        <TouchableOpacity onPress={() => { props.setVisiable(false) }}>
-                            <IconClose />
-                        </TouchableOpacity>
-                    </View>
+    useEffect(() => {
+        setListDataShow(listCollection)
+    }, [])
 
-                    {/* <Search
+    return (
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={props.visiable}>
+                  
+                    <View style={styles.constrainOpacity}></View>
+
+              
+                <TouchableOpacity
+                    style={styles.centeredView}
+                    onPress={() => { props.setVisiable(false) }}
+                    activeOpacity={1}
+                >
+                    <View style={styles.modalView}>
+                        <View style={{ height: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Text style={styles.title}>{trans('select_collection', language)}</Text>
+                            <TouchableOpacity onPress={() => { props.setVisiable(false) }}>
+                                <IconClose />
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* <Search
                         height={46}
                         marginTop={16}
                     /> */}
 
 
-                    {/* <View
+                        {/* <View
                         style={{ flexDirection: 'row', alignItems: 'center', height: 68, marginTop: 16 }}
                     >
                         <View style={styles.image}>
@@ -86,47 +96,45 @@ const PopupCollection = (props: PopupConfig) => {
 
                     </View> */}
 
-                    <View style={{flexDirection: 'row', alignItems: 'center', height: 46, marginTop: 16,backgroundColor:color.BG_INPUT, borderRadius:24 }}>
-                        <View style={styles.iconSearchBg}>
-                            <IconSearch />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', height: 46, marginTop: 16, backgroundColor: color.BG_INPUT, borderRadius: 24 }}>
+                            <View style={styles.iconSearchBg}>
+                                <IconSearch />
+                            </View>
+                            <TextInput
+                                style={styles.inputSearch}
+                                placeholder={trans('search_collection', language)}
+                                placeholderTextColor={color.PLACEHOLDER}
+                                selectionColor={color.PLACEHOLDER}
+                                multiline={false}
+                                numberOfLines={1}
+                                onChangeText={(value) => {
+                                    search(value)
+                                }}
+                            />
                         </View>
-                        <TextInput
-                            style={styles.inputSearch}
-                            placeholder='Search collection'
-                            placeholderTextColor={color.PLACEHOLDER}
-                            selectionColor={color.PLACEHOLDER}
-                            multiline={false}
-                            numberOfLines={1}
-                            onChangeText={(value) => {
-                                search(value)
-                            }}
-                        />
+
+                        <View style={{ flex: 1, marginTop: 20 }}>
+                            <FlatList
+                                data={listDataShow}
+                                renderItem={renderItem}
+                                keyExtractor={item => item.id.toString()}
+                            />
+                        </View>
+
+                        <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
+                            <TouchableOpacity
+                                style={styles.buttonPlus}
+                                onPress={() => {
+                                    props.setVisiable(false);
+                                    props.setVisiableCreate(true)
+                                }}
+                            >
+                                <IconPlus />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-
-                    <View style={{ flex: 1, marginTop: 20 }}>
-                        <FlatList
-                            data={listDataShow}
-                            renderItem={renderItem}
-                            keyExtractor={item => item.id.toString()}
-                        />
-                    </View>
-
-                    <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
-                        <TouchableOpacity
-                            style={styles.buttonPlus}
-                            onPress={() => {
-                                props.setVisiable(false);
-                                props.setVisiableCreate(true)
-                            }}
-                        >
-                            <IconPlus />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </TouchableOpacity>
-        </Modal >
-
-
+                </TouchableOpacity>
+            </Modal >
     );
 }
 
@@ -183,7 +191,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        height: metric.DEVICE_HEIGHT,
+        height: metric.DEVICE_HEIGHT + 50,
         width: metric.DEVICE_WIDTH
     },
     image: {
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
         marginRight: 15,
         flex: 1,
         fontSize: 16,
-        color:color.TITLE
+        color: color.TITLE
     },
 });
 

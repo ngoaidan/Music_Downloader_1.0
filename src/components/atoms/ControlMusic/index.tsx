@@ -16,8 +16,10 @@ import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
 
 var soundTask;
+var repeat;
+var musicPlaying;
 
-export const play = (infoMusicPlaying, setMaxDuration, dispatch, musicPlaying, shuffle, repeat) => {
+export const play = (infoMusicPlaying, setMaxDuration, dispatch, shuffle) => {
     if (soundTask) soundTask.release()
     soundTask = new Sound(infoMusicPlaying.path, Sound.MAIN_BUNDLE, async (error) => {
         if (error) {
@@ -55,21 +57,19 @@ export const play = (infoMusicPlaying, setMaxDuration, dispatch, musicPlaying, s
         })
 
         MusicControl.on(Command.nextTrack, () => {
-            next(dispatch, musicPlaying, shuffle, repeat)
+            next(dispatch, shuffle)
         })
 
         MusicControl.on(Command.previousTrack, () => {
-            previous(dispatch, musicPlaying, shuffle)
+            previous(dispatch, shuffle)
         })
         soundTask.play(() => {
-            if (repeat == 2) {
-                console.log("🚀 ~ file: index.tsx ~ line 155 ~ soundTask.play ~ musicPlaying.indexPlaying", musicPlaying.indexPlaying)
-                console.log("🚀 ~ file: index.tsx ~ line 155 ~ soundTask.play ~ musicPlaying.listMusic[musicPlaying.indexPlaying]", musicPlaying.listMusic[musicPlaying.indexPlaying])
-
-                dispatch(setInfoMusicPlaying(musicPlaying.listMusic[musicPlaying.indexPlaying]))
+            if(repeat ==2){
+            console.log("🚀 ~ file: index.tsx ~ line 68 ~ soundTask.play ~ repeat", repeat)
+               play(infoMusicPlaying,setMaxDuration,dispatch,shuffle)
             }
-            else {
-                next(dispatch, musicPlaying, shuffle, repeat)
+            else{
+                next(dispatch, shuffle)
             }
         })
         setMaxDuration(soundTask.getDuration())
@@ -94,19 +94,18 @@ export const pause = () => {
     soundTask.pause()
 }
 
-export const next = (dispatch, musicPlaying, shuffle, repeat) => {
+export const next = (dispatch, shuffle) => {
     if (shuffle) {
         let indexRandom = fn_GetRandomID(musicPlaying.listMusic.length - 1)
         dispatch(setIndexPlaying(indexRandom))
         dispatch(setInfoMusicPlaying(musicPlaying.listMusic[indexRandom]))
     }
     else {
-        if (repeat == 1 && musicPlaying.listMusic.length - 1 == musicPlaying.indexPlaying + 1) {
-            soundTask.release()
-        }
-        else if (musicPlaying.listMusic.length - 1 < musicPlaying.indexPlaying + 1) {
-            dispatch(setIndexPlaying(0))
-            dispatch(setInfoMusicPlaying(musicPlaying.listMusic[0]))
+       if (musicPlaying.indexPlaying + 1 > musicPlaying.listMusic.length - 1) {
+           console.log(musicPlaying.indexPlaying + 1)
+            let newIndex = 0;
+            dispatch(setIndexPlaying(newIndex))
+            dispatch(setInfoMusicPlaying(musicPlaying.listMusic[newIndex]))
         }
         else {
             let newIndex = musicPlaying.indexPlaying + 1
@@ -116,7 +115,7 @@ export const next = (dispatch, musicPlaying, shuffle, repeat) => {
     }
 }
 
-export const previous = (dispatch, musicPlaying, shuffle) => {
+export const previous = (dispatch, shuffle) => {
     if (shuffle) {
         let indexRandom = fn_GetRandomID(musicPlaying.listMusic.length - 1)
         dispatch(setIndexPlaying(indexRandom))
@@ -136,18 +135,16 @@ export const previous = (dispatch, musicPlaying, shuffle) => {
     }
 }
 
-
 const ControlMusic = () => {
     const dispatch = useDispatch()
     const [currentDuration, setCurrentDuration] = useState(0);
     const [maxDuration, setMaxDuration] = useState(1);
     const infoMusicPlaying = useSelector((state: any) => state?.infoMusicPlaying)
     const soundTaskStatus = useSelector((state: any) => state?.soundTaskStatus)
-    const musicPlaying = useSelector((state: any) => state?.musicPlaying)
+    musicPlaying = useSelector((state: any) => state?.musicPlaying)
     const shuffle = useSelector((state: any) => state?.shuffle)
     const navigation = useNavigation();
-    const repeat = useSelector((state: any) => state?.repeat)
-
+    repeat = useSelector((state: any) => state?.repeat)
 
     useEffect(() => {
         if (soundTask) {
@@ -164,7 +161,7 @@ const ControlMusic = () => {
     }, [soundTask])
 
     useEffect(() => {
-        play(infoMusicPlaying, setMaxDuration, dispatch, musicPlaying, shuffle, repeat)
+        play(infoMusicPlaying, setMaxDuration, dispatch, shuffle)
         setCurrentDuration(0)
         dispatch(setSoundStatus(true))
     }, [infoMusicPlaying])
@@ -228,7 +225,7 @@ const ControlMusic = () => {
 
                     <TouchableOpacity
                         onPress={() => {
-                            next(dispatch, musicPlaying, shuffle, repeat)
+                            next(dispatch, shuffle)
                         }}>
                         <IconSkipNext />
                     </TouchableOpacity>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BaseProject</string>
+    <string name="app_name">Music Downloader</string>
         <string name="default_notification_channel_id">3</string>
 
 </resources>

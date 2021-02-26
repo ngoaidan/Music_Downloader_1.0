@@ -19,12 +19,45 @@ import {
     SET_INDEX_PLAYING,
     SET_SHUFFLE,
     SET_REPEAT,
+    CHANGE_LANGUAGE,
+    LOAD_SETTINGS,
+    SHOW_ERROR_INTERNET,
+    SET_TASK_DOWNLOADING,
+    SET_PERCENT,
 } from './constrans';
 
 export const showMusicControl = (status: boolean) => {
     return {
         type: SHOW_CONTROL_MUSIC,
         payload: status
+    }
+}
+
+export const setTaskDownloading = (task:any) => {
+    return {
+        type: SET_TASK_DOWNLOADING,
+        payload: task
+    }
+}
+
+export const changeLanguage = (language:string) => {
+    return {
+        type: CHANGE_LANGUAGE,
+        payload: language
+    }
+}
+
+export const loadSettings = (settings:any) => {
+    return {
+        type: LOAD_SETTINGS,
+        payload: settings
+    }
+}
+
+export const setPercent = (percent) => {
+    return {
+        type: SET_PERCENT,
+        payload: percent
     }
 }
 
@@ -128,6 +161,13 @@ export const setCurrentIDCollectionSelect = (id: any) => {
 export const showLoading = (status: any) => {
     return {
         type: SHOW_LOADING,
+        payload: status
+    }
+}
+
+export const showErrorInternet = (status: any) => {
+    return {
+        type: SHOW_ERROR_INTERNET,
         payload: status
     }
 }

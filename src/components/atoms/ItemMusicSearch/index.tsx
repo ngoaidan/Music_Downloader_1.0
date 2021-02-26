@@ -1,31 +1,28 @@
 import { ImageMusicDefault } from '@assets/images';
 import color from '@config/colors';
 import metric from '@config/metrics';
-import stylesGeneral from '@config/stylesGeneral';
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { CheckBox } from 'react-native-elements'
-import MusicControl, { Command } from 'react-native-music-control'
-import Sound from 'react-native-sound'
-import ControlMusic from '../ControlMusic';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItemMusicEdit, removeItemMusicEdit, setIndexPlaying, setInfoMusicPlaying, setSound, setSoundStatus, showMusicControl } from '@services/redux/actions';
+import { addItemMusicEdit, removeItemMusicEdit, setEditMode, setIndexPlaying, setInfoMusicPlaying, showMusicControl } from '@services/redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
+import { isDuration } from 'moment';
 
-const ItemMusicInPlayMusic = (item: any) => {
+const ItemMusicSearch = (item: any) => {
     const navigation = useNavigation();
+    const editMode = useSelector((state: any) => state?.editMode)
+    const [select, setSelect] = useState(false);
     const dispatch = useDispatch();
-    const soundTask = useSelector((state: any) => state?.soundTask)
+
+    useEffect(() => {
+
+    }, [select])
 
     return (
-        <TouchableOpacity
-            style={[styles.constain]} activeOpacity={0.5}
-            onPress={() => {
-                dispatch(showMusicControl(true))
-                dispatch(setIndexPlaying(item.index))
-                dispatch(setInfoMusicPlaying(item.data))
-            }}
+        <View
+            style={[styles.constain]}
         >
             <View
                 style={{ flexDirection: 'row', borderBottomWidth: 1, alignItems: 'center', flex: 1, borderColor: color.LINE }}
@@ -33,16 +30,16 @@ const ItemMusicInPlayMusic = (item: any) => {
                 <View style={styles.image}>
                     <Image
                         style={styles.image}
-                        source={(item?.data.thumbnail != '') ? { uri: item?.data.thumbnail } : ImageMusicDefault}
+                        source={(item.data.snippet.thumbnails.high.url != '') ? { uri: item.data.snippet.thumbnails.high.url } : ImageMusicDefault}
                     />
                 </View>
                 <Text
                     numberOfLines={2}
                     ellipsizeMode="tail"
                     style={styles.title}
-                >{item.data.name}</Text>
+                >{item.data.snippet.title}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
     );
 }
 
@@ -51,6 +48,7 @@ const styles = StyleSheet.create({
         height: 68,
         width: metric.DEVICE_WIDTH,
         flexDirection: 'row',
+        flex: 1
 
     },
     image: {
@@ -59,12 +57,13 @@ const styles = StyleSheet.create({
         borderRadius: 12,
     },
     title: {
-        fontSize: 13,
+        fontSize: 12,
         fontWeight: 'bold',
         color: color.TITLE,
         marginLeft: 12,
+        flex: 1,
         marginRight: 80
     }
 })
 
-export default ItemMusicInPlayMusic;
+export default ItemMusicSearch;

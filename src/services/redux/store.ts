@@ -9,7 +9,10 @@ var initState = {
     listCollection: [],
     listMusic: [],
     listCollectionEdit: [],
-    listEditMusic:[]
+    listEditMusic:[],
+    settings: {
+        language: 'en'
+    }
 };
 
 export const store = createStore(rootReducer,initState);
