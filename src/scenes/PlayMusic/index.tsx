@@ -15,6 +15,7 @@ import ItemMusicInPlayMusic from '@components/atoms/ItemMusicInPlayMusic';
 import { ImageMusicDefault } from '@assets/images';
 import { play, pause, resume, next, previous } from '@components/atoms/ControlMusic'
 import IconRepeatOne from '@assets/svg/repeat1';
+import { BackHandler } from 'react-native';
 
 const renderItem = ({ item,index }) => (
     <ItemMusicInPlayMusic data={item} index={index}/>

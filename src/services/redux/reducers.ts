@@ -39,7 +39,7 @@ var initState = {
     popupRename: false,
     infoMusicPlaying: [],
     currentIDCollectionSelect: -1,
-    showAlert:{
+    showAlert: {
         errorInternet: false,
     },
     musicPlaying: {
@@ -51,7 +51,8 @@ var initState = {
     settings: {
         language: 'en'
     },
-    taskDownloading:undefined
+    taskDownloading: undefined,
+    percentDownloading: 0
 };
 
 export const rootReducer = (state: any = initState, action: any) => {
@@ -74,16 +75,13 @@ export const rootReducer = (state: any = initState, action: any) => {
                 }
             }
         }
-        case SET_PERCENT:{
+        case SET_PERCENT: {
             return {
                 ...state,
-                taskDownloading:{
-                    ...state.taskDownloading,
-                    percent:action.payload
-                }
+                percentDownloading: action.payload
             }
         }
-        case SET_TASK_DOWNLOADING:{
+        case SET_TASK_DOWNLOADING: {
             console.log('set task')
             return {
                 ...state,
@@ -96,7 +94,7 @@ export const rootReducer = (state: any = initState, action: any) => {
                 settings: action.payload
             }
         }
-        case SHOW_ERROR_INTERNET:{
+        case SHOW_ERROR_INTERNET: {
             return {
                 ...state,
                 showAlert: {

@@ -9,7 +9,7 @@ import { fn_GetAPI, fn_PushNotification, fn_stop } from '@services/api';
 import Clipboard from '@react-native-community/clipboard'
 import { EatBeanLoader } from 'react-native-indicator';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTaskDownloading, showErrorInternet, showLoading } from '@services/redux/actions';
+import { setPercent, setTaskDownloading, showErrorInternet, showLoading, showTabbar } from '@services/redux/actions';
 import { trans } from "@services/i18n"
 import ItemMusic from '@components/atoms/ItemMusic';
 import ItemMusicSearch from '@components/atoms/ItemMusicSearch';
@@ -23,6 +23,7 @@ const Home = () => {
     const language = useSelector((state: any) => state?.settings.language)
     const errorInternet = useSelector((state: any) => state?.showAlert.errorInternet)
     const taskDownloading = useSelector((state: any) => state?.taskDownloading)
+    const percentDownloading = useSelector((state: any) => state?.percentDownloading)
 
     const [visiableButtonDownload, setVisiableButtonDownload] = useState(true)
     const [textInputValue, setTextInputValue] = useState('')
@@ -50,10 +51,9 @@ const Home = () => {
         })
     }
 
-    useEffect(() => {
-        console.log("🚀 ~ file: index.tsx ~ line 56 ~ Home ~ taskDownloading", taskDownloading)
-
-    }, [taskDownloading])
+    useEffect(()=>{
+        dispatch(showTabbar(false))
+    },[])
 
     useEffect(() => {
         if (visiableButtonDownload == false || (videoSelect != null && visiableButtonDownload == true)) {
@@ -115,38 +115,38 @@ const Home = () => {
                                 style={[stylesGeneral.centerAll, styles.button]}
                                 onPress={() => {
                                    
-                                    // download
-                                    if (videoSelect != null) {
-                                        Keyboard.dismiss()
-                                        if (textInputValue != '') {
-                                            fn_GetAPI(videoSelect.id.videoId, dispatch)
-                                            setTextInputValue('')
-                                            setVideoSelect(null)
-                                            dispatch(showLoading(true))
-                                        }
-                                    }
-                                    // search
-                                    else {
-                                        videoSearch(textInputValue)
-                                        setVisiableButtonDownload(false)
-                                    }
-                                   
-                                  
-                                    // if (!loading) {
+                                    // // download
+                                    // if (videoSelect != null) {
                                     //     Keyboard.dismiss()
                                     //     if (textInputValue != '') {
-                                    //         fn_GetAPI(textInputValue, dispatch)
+                                    //         fn_GetAPI(videoSelect.id.videoId, dispatch)
                                     //         setTextInputValue('')
                                     //         setVideoSelect(null)
                                     //         dispatch(showLoading(true))
                                     //     }
                                     // }
+                                    // // search
                                     // else {
-                                    //     setShowAlertProcessing(true)
-                                    //     setTimeout(() => {
-                                    //         setShowAlertProcessing(false)
-                                    //     }, 5000)
+                                    //     videoSearch(textInputValue)
+                                    //     setVisiableButtonDownload(false)
                                     // }
+                                   
+                                  
+                                    if (!loading) {
+                                        Keyboard.dismiss()
+                                        if (textInputValue != '') {
+                                            fn_GetAPI(textInputValue, dispatch)
+                                            setTextInputValue('')
+                                            setVideoSelect(null)
+                                            dispatch(showLoading(true))
+                                        }
+                                    }
+                                    else {
+                                        setShowAlertProcessing(true)
+                                        setTimeout(() => {
+                                            setShowAlertProcessing(false)
+                                        }, 5000)
+                                    }
                                 }}
                             >
                                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: color.TITLE, }}> {videoSelect != null ? (trans('download', language)) : (trans('search', language))} </Text>
@@ -164,7 +164,7 @@ const Home = () => {
                                     <EatBeanLoader color="#fff" />
                                     <Text
                                         style={{ color: '#fff', fontSize: 16, marginLeft: 20 }}
-                                    >{taskDownloading?.percent != undefined ? Math.round(taskDownloading.percent * 100) : 0} %</Text>
+                                    >{percentDownloading <= 1 ? Math.round(percentDownloading * 100) : 100} %</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={[styles.buttonCancle]}
@@ -175,6 +175,7 @@ const Home = () => {
                                         catch{
 
                                         }
+                                        dispatch(setPercent(0))
                                         dispatch(showLoading(false))
                                         dispatch(setTaskDownloading(null))
 

@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { NavigationContainer,DarkTheme  } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { COLLECTIONS, COLLECTIONSTACK, HOME, LISTMUSIC, PLAYMUSIC, SETTINGS, TABNAVIGATION } from '@config/constrans';
 import { Collection, Home, ListMusic, PlayMusic, Settings } from '@scenes';
@@ -26,17 +26,17 @@ const CollectionStack = () => {
                 name={LISTMUSIC}
                 component={ListMusic}
                 options={{
-                    gestureEnabled:true,
-                    gestureDirection:'horizontal',
+                    gestureEnabled: true,
+                    gestureDirection: 'horizontal',
                 }}
             ></StackCollection.Screen>
-            <StackCollection.Screen
+            {/* <StackCollection.Screen
                 name={PLAYMUSIC}
                 component={PlayMusic}
                 options={{
-                    gestureEnabled:true,
-                    gestureDirection:'horizontal'
-                }} ></StackCollection.Screen>
+                    gestureEnabled: true,
+                    gestureDirection: 'horizontal'
+                }} ></StackCollection.Screen> */}
         </StackCollection.Navigator>
     )
 }
@@ -108,22 +108,29 @@ const Navigator = () => {
                 console.log('Insert collection success')
             }
         })
-        Promise.all([task1, task2, task3,task4]).then(() => {
+        Promise.all([task1, task2, task3, task4]).then(() => {
             loadData()
         })
 
         return (
             <NavigationContainer theme={DarkTheme} >
-                <Stack.Navigator 
-                initialRouteName={TABNAVIGATION}
-                 headerMode="none"  
-                 screenOptions={{
-                     gestureEnabled:true,
-                     gestureDirection:'horizontal'
+                <Stack.Navigator
+                    initialRouteName={TABNAVIGATION}
+                    headerMode="none"
+                    screenOptions={{
+                        gestureEnabled: true,
+                        gestureDirection: 'horizontal'
 
-                 }}
-                 >
+                    }}
+                >
                     <Stack.Screen name={TABNAVIGATION} component={TabStack}></Stack.Screen>
+                    <Stack.Screen
+                        name={PLAYMUSIC}
+                        component={PlayMusic}
+                        options={{
+                            gestureEnabled: true,
+                            gestureDirection: 'horizontal'
+                        }} ></Stack.Screen>
                 </Stack.Navigator>
             </NavigationContainer>
         )
@@ -132,8 +139,25 @@ const Navigator = () => {
         loadData()
         return (
             <NavigationContainer theme={DarkTheme}>
-                <Stack.Navigator initialRouteName={TABNAVIGATION} headerMode="none"  >
+                <Stack.Navigator
+                    initialRouteName={TABNAVIGATION}
+                    headerMode="none"
+                    screenOptions={{
+                        gestureEnabled: true,
+                        gestureDirection: 'horizontal',
+                        
+                    }}>
                     <Stack.Screen name={TABNAVIGATION} component={TabStack}></Stack.Screen>
+                    <Stack.Screen
+                        name={PLAYMUSIC}
+                        component={PlayMusic}
+                        options={{
+                            gestureEnabled: true,
+                            gestureDirection: 'horizontal',
+                            animationEnabled:false
+                        }} 
+                        
+                        ></Stack.Screen>
                 </Stack.Navigator>
             </NavigationContainer>
         )

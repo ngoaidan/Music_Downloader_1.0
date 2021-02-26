@@ -4,8 +4,8 @@ import color from '@config/colors';
 import metric from '@config/metrics';
 import stylesGeneral from '@config/stylesGeneral';
 import { trans } from '@services/i18n';
-import { changeLanguage } from '@services/redux/actions';
-import React, { Component, useState } from 'react';
+import { changeLanguage, showTabbar } from '@services/redux/actions';
+import React, { Component, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Share } from 'react-native';
 import SendIntentAndroid from 'react-native-send-intent';
 import ShadowView from 'react-native-simple-shadow-view'
@@ -36,6 +36,11 @@ const Settings = () => {
         } catch (error) {
         }
     };
+
+    useEffect(()=>{
+        dispatch(showTabbar(false))
+    },[])
+
     return (
         <View style={stylesGeneral.container}>
             <Header title={trans('settings',language)} paddingLeft={16} />

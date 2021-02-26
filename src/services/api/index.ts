@@ -1,3 +1,4 @@
+import { showMusicControl, setInfoMusicPlaying, setIndexPlaying, setCurrentIDCollectionSelect } from '@services/redux/actions';
 import { loadMusic, showLoading, showErrorInternet, setTaskDownloading, setPercent } from './../redux/actions';
 import { dboCollection, dboMusic } from '@services/sqlite';
 import RNBackgroundDownloader from 'react-native-background-downloader';
@@ -5,6 +6,8 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import PushNotification from "react-native-push-notification";
 import cheerio from "cheerio-without-node-native"
+import { PLAYMUSIC } from '@config/constrans';
+import {navigate} from '@navigations/rootNavigation'
 
 const API_DOWN = "https://downloader28.banabatech.com/oldtest.php?url=";
 const YT = "https://www.youtube.com/watch?v="
@@ -12,6 +15,7 @@ const YT = "https://www.youtube.com/watch?v="
 const fn_GetAPI = async (link, dispatch: any) => {
     let json: any = "not working";
     let linkVideo = YT + link
+    dispatch(setPercent(0.2))
 
     // await fetch(API_DOWN + linkVideo)
     //     .then((response) => response.json())
@@ -36,8 +40,10 @@ const fn_GetAPI = async (link, dispatch: any) => {
     //     });
 
     try {
-        let res = await fn_crawlData(linkVideo);
+        let res = await fn_crawlData(link);
         processButton(res, dispatch)
+        dispatch(setPercent(0.3))
+
     }
     catch {
         dispatch(showLoading(false))
@@ -102,27 +108,32 @@ const processButton = (data, dispatch: any) => {
             })
             .begin((expectedBytes) => {
                 dispatch(setTaskDownloading(task))
-
             })
             .progress((percent, bytesWritten, totalBytes) => {
-                dispatch(setPercent(percent))
+                dispatch(setPercent(percent+0.3))
             })
             .done(async () => {
                 dispatch(setTaskDownloading(task))
                 dispatch(showLoading(false))
                 await dboMusic.InsertItem(infoMusic).then(async res => {
-                    console.log("🚀 ~ file: index.ts ~ line 99 ~ dboMusic.InsertItem ~ res", res)
-
-                    await dboMusic.SelectAll().then((res) => {
+                    await dboMusic.SelectAll().then((res:any) => {
                         dispatch(loadMusic(res))
                         dispatch(showLoading(false))
                         fn_PushNotification("Finished downloading", `The video ${title} has finished downloading`)
+                        dispatch(setPercent(0))
+                        dispatch(setIndexPlaying(res.length - 1))
+                        dispatch(setInfoMusicPlaying(infoMusic))
+                        dispatch(showMusicControl(true))
+                        dispatch(setCurrentIDCollectionSelect(1))
+                        navigate(PLAYMUSIC,{})
                     })
+                   
                 }).catch((err) => {
-                    console.log("🚀 ~ file: index.ts ~ line 99 ~ dboMusic.InsertItem ~ res", err)
                 })
             })
             .error((error: any) => {
+                dispatch(setPercent(0))
+
                 dispatch(showLoading(false))
                 dispatch(showErrorInternet(true))
             })
@@ -195,6 +206,7 @@ const fn_crawlData = async (linkVideo) => {
         let indexElement = 0;
         let i = 0;
         let linkDownArr: any[] = [];
+
         // while (1) {
         //     if (a[indexElement].children[i] == undefined) {
         //         break;

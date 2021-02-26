@@ -23,10 +23,8 @@ export const play = (infoMusicPlaying, setMaxDuration, dispatch, shuffle) => {
     if (soundTask) soundTask.release()
     soundTask = new Sound(infoMusicPlaying.path, Sound.MAIN_BUNDLE, async (error) => {
         if (error) {
-            console.log('failed to load the sound', error);
             return;
         }
-
         MusicControl.setNowPlaying({
             title: infoMusicPlaying.name,
             artwork: infoMusicPlaying.thumbnail,
@@ -64,11 +62,11 @@ export const play = (infoMusicPlaying, setMaxDuration, dispatch, shuffle) => {
             previous(dispatch, shuffle)
         })
         soundTask.play(() => {
-            if(repeat ==2){
-            console.log("🚀 ~ file: index.tsx ~ line 68 ~ soundTask.play ~ repeat", repeat)
-               play(infoMusicPlaying,setMaxDuration,dispatch,shuffle)
+            if (repeat == 2) {
+                console.log("🚀 ~ file: index.tsx ~ line 68 ~ soundTask.play ~ repeat", repeat)
+                play(infoMusicPlaying, setMaxDuration, dispatch, shuffle)
             }
-            else{
+            else {
                 next(dispatch, shuffle)
             }
         })
@@ -101,8 +99,8 @@ export const next = (dispatch, shuffle) => {
         dispatch(setInfoMusicPlaying(musicPlaying.listMusic[indexRandom]))
     }
     else {
-       if (musicPlaying.indexPlaying + 1 > musicPlaying.listMusic.length - 1) {
-           console.log(musicPlaying.indexPlaying + 1)
+        if (musicPlaying.indexPlaying + 1 > musicPlaying.listMusic.length - 1) {
+            console.log(musicPlaying.indexPlaying + 1)
             let newIndex = 0;
             dispatch(setIndexPlaying(newIndex))
             dispatch(setInfoMusicPlaying(musicPlaying.listMusic[newIndex]))
@@ -187,20 +185,20 @@ const ControlMusic = () => {
                 <TouchableOpacity
                     style={{ height: 32, flexDirection: 'row', alignItems: 'center', flex: 1 }}
                     onPress={() => {
-                        navigation.navigate(PLAYMUSIC);
+                        navigation.navigate(PLAYMUSIC, {});
                     }}
                 >
                     <View style={{ height: 32, width: 32, borderRadius: 6 }}>
                         <Image
                             style={{ height: 32, width: 32, borderRadius: 6 }}
-                            source={(infoMusicPlaying.thumbnail != '') ? { uri: infoMusicPlaying.thumbnail } : ImageMusicDefault}
+                            source={(infoMusicPlaying?.thumbnail != '') ? { uri: infoMusicPlaying?.thumbnail } : ImageMusicDefault}
                         />
                     </View>
                     <Text
                         style={{ fontSize: 16, width: metric.DEVICE_WIDTH - 180, fontWeight: 'bold', color: color.TITLE, marginLeft: 10 }}
                         numberOfLines={1}
                         ellipsizeMode="tail"
-                    >{infoMusicPlaying.name}</Text>
+                    >{infoMusicPlaying?.name}</Text>
                 </TouchableOpacity>
                 <View style={styles.constainControl}>
                     {soundTaskStatus ?

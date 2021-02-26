@@ -5,7 +5,7 @@ import PopupDelete from '@components/atoms/PopupDelete';
 import PopupRename from '@components/atoms/PopupRename';
 import color from '@config/colors';
 import stylesGeneral from '@config/stylesGeneral';
-import { setEditMode } from '@services/redux/actions';
+import { setEditMode, showTabbar } from '@services/redux/actions';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
@@ -42,6 +42,10 @@ const Collection = () => {
             setListDataShow(listCollection)
         }
     }
+
+    useEffect(()=>{
+        dispatch(showTabbar(false))
+    },[])
 
     useEffect(() => {
         if (listCollectionEdit != undefined) {
