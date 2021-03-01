@@ -4,7 +4,7 @@ import stylesGeneral from '@config/stylesGeneral';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Keyboard, Image, TouchableOpacity } from 'react-native';
 import { FlatList, ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { IconCheck, IconClose, IconError, IconPaste } from '@assets/svg'
+import { BackgroundButton, IconCheck, IconClose, IconError, IconPaste } from '@assets/svg'
 import { fn_GetAPI, fn_PushNotification, fn_stop } from '@services/api';
 import Clipboard from '@react-native-community/clipboard'
 import { EatBeanLoader } from 'react-native-indicator';
@@ -16,6 +16,8 @@ import ItemMusicSearch from '@components/atoms/ItemMusicSearch';
 import YTSearch from '@services/api/youtubeSearch'
 import { ImageMusicDefault } from '@assets/images';
 import metric from '@config/metrics';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -51,9 +53,9 @@ const Home = () => {
         })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(showTabbar(false))
-    },[])
+    }, [])
 
     useEffect(() => {
         if (visiableButtonDownload == false || (videoSelect != null && visiableButtonDownload == true)) {
@@ -111,10 +113,11 @@ const Home = () => {
                                 </View>
                             </View>) : null}
                         {!loading ? (
+
                             <TouchableOpacity
                                 style={[stylesGeneral.centerAll, styles.button]}
                                 onPress={() => {
-                                   
+
                                     // // download
                                     // if (videoSelect != null) {
                                     //     Keyboard.dismiss()
@@ -130,8 +133,8 @@ const Home = () => {
                                     //     videoSearch(textInputValue)
                                     //     setVisiableButtonDownload(false)
                                     // }
-                                   
-                                  
+
+
                                     if (!loading) {
                                         Keyboard.dismiss()
                                         if (textInputValue != '') {
@@ -149,6 +152,9 @@ const Home = () => {
                                     }
                                 }}
                             >
+                                <View style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%', flex: 1 }}>
+                                    <BackgroundButton height={'100%'} width={'100%'} />
+                                </View>
                                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: color.TITLE, }}> {videoSelect != null ? (trans('download', language)) : (trans('search', language))} </Text>
                             </TouchableOpacity>
                         ) :
@@ -161,6 +167,9 @@ const Home = () => {
                                             setShowAlertProcessing(false)
                                         }, 5000)
                                     }}>
+                                    {/* <View style={{ backgroundColor:'red',position: 'absolute', left: 0, top: 0, height: '100%', width: '100%' }}>
+                                        <BackgroundButton height={'100%'} width={'100%'} />
+                                    </View> */}
                                     <EatBeanLoader color="#fff" />
                                     <Text
                                         style={{ color: '#fff', fontSize: 16, marginLeft: 20 }}
@@ -169,10 +178,10 @@ const Home = () => {
                                 <TouchableOpacity
                                     style={[styles.buttonCancle]}
                                     onPress={() => {
-                                        try{
+                                        try {
                                             fn_stop()
                                         }
-                                        catch{
+                                        catch {
 
                                         }
                                         dispatch(setPercent(0))
@@ -260,6 +269,7 @@ const styles = StyleSheet.create({
         borderRadius: 24,
         marginTop: 16,
         backgroundColor: color.BUTTON_SHUFFLE,
+
     },
     buttonLoadingContain: {
         height: 46,
@@ -307,7 +317,13 @@ const styles = StyleSheet.create({
         marginLeft: 12,
         flex: 1,
         marginRight: 0
-    }
+    },
+    linearGradient: {
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderRadius: 5,
+
+    },
 })
 
 export default Home;

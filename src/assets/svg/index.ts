@@ -16,6 +16,7 @@ import IconError from './error'
 import IconClose from './close'
 import IconPlus from './plus'
 import IconPause from './pause'
+import BackgroundButton from './buttonGradient'
 
 export {
     IconDownArrow,
@@ -35,5 +36,6 @@ export {
     IconError,
     IconClose,
     IconPlus,
-    IconPause
+    IconPause,
+    BackgroundButton
 }
