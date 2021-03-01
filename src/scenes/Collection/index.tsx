@@ -11,10 +11,15 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import { trans } from "@services/i18n"
+import ItemMusic from '@components/atoms/ItemMusic';
 
 
 const renderItem = ({ item }) => (
     <ItemCollection name={item.name} thumbnail={item.thumbnail != undefined ? item.thumbnail : ''} id={item.id} />
+);
+
+const renderItemMusic = ({ item, index }) => (
+    <ItemMusic data={item} index={index} />
 );
 
 const Collection = () => {
@@ -29,23 +34,33 @@ const Collection = () => {
     const [showControlEdit, setShowControlEdit] = useState(false)
     const [showPopupRename, setShowPopupRename] = useState(false)
     const [showPopupDelete, setShowPopupDelete] = useState(false)
+    const [isSearchControl, setIsSearchControl] = useState(false)
     const [listDataShow, setListDataShow] = useState<any[]>([])
+    const listMusic = useSelector((state: any) => state?.listMusic)
+    const [showButtonRight,setShowButtonRight] = useState(true)
 
     const search = (text: any) => {
-        setListDataShow(listCollection.filter((val: any) => {
-            let value = text.toLocaleLowerCase();
+        setListDataShow(listMusic.filter((val: any) => {
             if (val.name != "" && val.name.toLocaleLowerCase().search(text.toLocaleLowerCase()) > -1) return true;
             return false;
         }))
 
         if (text == "") {
-            setListDataShow(listCollection)
+            setIsSearchControl(false)
+            setListDataShow(listMusic)
+            setShowButtonRight(true)
+
+        }
+
+        else{
+            setIsSearchControl(true)
+            setShowButtonRight(false)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(showTabbar(false))
-    },[])
+    }, [])
 
     useEffect(() => {
         if (listCollectionEdit != undefined) {
@@ -63,8 +78,8 @@ const Collection = () => {
     }, [listCollectionEdit])
 
     useEffect(() => {
-        setListDataShow(listCollection)
-    }, [listCollection])
+        setListDataShow(listMusic)
+    }, [listMusic])
 
     return (
         <View style={stylesGeneral.container}>
@@ -72,7 +87,7 @@ const Collection = () => {
             <Header
                 title={editMode ? (trans('edit_collection', language)) : (trans('collection', language))}
                 paddingLeft={16}
-                buttonRight={true}
+                buttonRight={showButtonRight}
                 onEdit={() => {
                     dispatch(setEditMode(true))
                     setShowButtonDone(true)
@@ -83,6 +98,7 @@ const Collection = () => {
                     setShowButtonDone(false)
                 }}
             />
+
             <PopupRename
                 visiable={showPopupRename}
                 data={listCollectionEdit[0]}
@@ -114,14 +130,23 @@ const Collection = () => {
                 />
             </View>
 
-            <View style={styles.constainList}>
+            {!isSearchControl ? (<View style={styles.constainList}>
                 <FlatList
-                    data={listDataShow}
+                    data={listCollection}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                     numColumns={2}
                 />
-            </View>
+            </View>) : null}
+
+            {isSearchControl ? (<View style={[styles.constainList]}>
+                <FlatList
+                    data={listDataShow}
+                    renderItem={({ item, index }) => renderItemMusic({ item, index })}
+                    keyExtractor={item => item.id.toString()}
+                />
+            </View>) : null}
+
 
             {showControlEdit ? (
                 <View style={styles.constainMenu}>

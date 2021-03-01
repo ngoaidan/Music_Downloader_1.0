@@ -98,16 +98,19 @@ const Navigator = () => {
         })
         let task4 = dboMusic.CreateTable().then((res: any) => {
         })
+        
         let task2 = dboCollection.InsertItem({ name: "Download", thumbnail: "" }).then((res: any) => {
             if (res.status == 200) {
                 console.log('Insert collection success')
             }
         })
+
         let task3 = dboCollection.InsertItem({ name: "Favourist", thumbnail: "" }).then((res: any) => {
             if (res.status == 200) {
                 console.log('Insert collection success')
             }
         })
+
         Promise.all([task1, task2, task3, task4]).then(() => {
             loadData()
         })
