@@ -94,6 +94,7 @@ const Navigator = () => {
         return null;
     }
     else if (firstLoad == true) {
+        console.log("first")
         let task1 = dboCollection.CreateTable().then((res: any) => {
         })
         let task4 = dboMusic.CreateTable().then((res: any) => {

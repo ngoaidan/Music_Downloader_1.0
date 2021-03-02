@@ -7,9 +7,8 @@ const BackgroundButton = (props:any) => {
         width={props.width}
         height={props.height}
         fill="none"
-        viewBox="0 0 280 46"
       >
-        <Rect width="280" height="46" fill="url(#paint0_linear)" rx="22"></Rect>
+        <Rect width={props.width} height={props.height} fill="url(#paint0_linear)" rx="22"></Rect>
         <Defs>
           <LinearGradient
             id="paint0_linear"

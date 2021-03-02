@@ -5,21 +5,19 @@ import PopupDelete from '@components/atoms/PopupDelete';
 import PopupRename from '@components/atoms/PopupRename';
 import color from '@config/colors';
 import stylesGeneral from '@config/stylesGeneral';
-import { setEditMode, showTabbar } from '@services/redux/actions';
+import { setCurrentIDCollectionSelect, setEditMode, showTabbar } from '@services/redux/actions';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, FlatList, TextInputBase } from 'react-native';
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 import { trans } from "@services/i18n"
 import ItemMusic from '@components/atoms/ItemMusic';
+import moment from 'moment'
+import ItemMusicSearchInCollection from '@components/atoms/ItemMusicSearchInCollection';
 
 
 const renderItem = ({ item }) => (
     <ItemCollection name={item.name} thumbnail={item.thumbnail != undefined ? item.thumbnail : ''} id={item.id} />
-);
-
-const renderItemMusic = ({ item, index }) => (
-    <ItemMusic data={item} index={index} />
 );
 
 const Collection = () => {
@@ -37,7 +35,8 @@ const Collection = () => {
     const [isSearchControl, setIsSearchControl] = useState(false)
     const [listDataShow, setListDataShow] = useState<any[]>([])
     const listMusic = useSelector((state: any) => state?.listMusic)
-    const [showButtonRight,setShowButtonRight] = useState(true)
+    const [showButtonRight, setShowButtonRight] = useState(true)
+    const [textValue, setTextValue] = useState('')
 
     const search = (text: any) => {
         setListDataShow(listMusic.filter((val: any) => {
@@ -45,14 +44,8 @@ const Collection = () => {
             return false;
         }))
 
-        if (text == "") {
-            setIsSearchControl(false)
-            setListDataShow(listMusic)
-            setShowButtonRight(true)
-
-        }
-
-        else{
+        if (text != '') {
+            dispatch(setCurrentIDCollectionSelect(1))
             setIsSearchControl(true)
             setShowButtonRight(false)
         }
@@ -61,6 +54,14 @@ const Collection = () => {
     useEffect(() => {
         dispatch(showTabbar(false))
     }, [])
+
+    useEffect(() => {
+        if (textValue == '') {
+            setListDataShow(listMusic)
+            setIsSearchControl(false)
+            setShowButtonRight(true)
+        }
+    }, [textValue])
 
     useEffect(() => {
         if (listCollectionEdit != undefined) {
@@ -83,7 +84,6 @@ const Collection = () => {
 
     return (
         <View style={stylesGeneral.container}>
-
             <Header
                 title={editMode ? (trans('edit_collection', language)) : (trans('collection', language))}
                 paddingLeft={16}
@@ -119,13 +119,15 @@ const Collection = () => {
                 </View>
                 <TextInput
                     style={styles.inputSearch}
-                    placeholder={trans('search_collection', language)}
+                    placeholder={trans('search', language)}
                     placeholderTextColor={color.PLACEHOLDER}
                     selectionColor={color.PLACEHOLDER}
                     multiline={false}
                     numberOfLines={1}
-                    onChangeText={(value) => {
-                        search(value)
+                    value={textValue}
+                    onChangeText={(textValue) => {
+                        search(textValue)
+                        setTextValue(textValue)
                     }}
                 />
             </View>
@@ -134,19 +136,20 @@ const Collection = () => {
                 <FlatList
                     data={listCollection}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                     numColumns={2}
                 />
             </View>) : null}
 
-            {isSearchControl ? (<View style={[styles.constainList]}>
-                <FlatList
-                    data={listDataShow}
-                    renderItem={({ item, index }) => renderItemMusic({ item, index })}
-                    keyExtractor={item => item.id.toString()}
-                />
-            </View>) : null}
-
+            {isSearchControl ? (
+                <View style={[styles.constainList]}>
+                    <FlatList
+                        listKey="1.1"
+                        data={listDataShow}
+                        renderItem={({ item, index }) =>  <ItemMusicSearchInCollection data={item} index={index} setText={setTextValue}/>}
+                        keyExtractor={item => 'D' + item.id.toString()}
+                    />
+                </View>) : null}
 
             {showControlEdit ? (
                 <View style={styles.constainMenu}>

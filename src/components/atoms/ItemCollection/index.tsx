@@ -1,5 +1,5 @@
 import { ImageCollectionDefault } from '@assets/images';
-import { IconCheck } from '@assets/svg';
+import { IconCheck, IconMusicDefault } from '@assets/svg';
 import color from '@config/colors';
 import { LISTMUSIC } from '@config/constrans';
 import metric from '@config/metrics';
@@ -11,14 +11,6 @@ import { StyleSheet, View, Text, Image, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from 'react-redux';
 
-const renderItem = ({ item }) => (
-    <Image
-        style={styles.image}
-        source={(item.thumbnail != '') ? { uri: item.thumbnail } : ImageCollectionDefault}
-        resizeMode={'cover'}
-    />
-);
-
 const ItemCollection = (item: any) => {
     const navigation = useNavigation();
     const editMode = useSelector((state: any) => state?.editMode)
@@ -26,6 +18,9 @@ const ItemCollection = (item: any) => {
     const [select, setSelect] = useState(false);
     const dispatch = useDispatch();
     const [opacity, setOpacity] = useState(0.2)
+    const [listUrlImage, setListUrlImage] = useState<any[]>([])
+    const listMusic = useSelector((state: any) => state?.listMusic)
+    const [isOneSong, setIsOneSong] = useState(false)
 
     useEffect(() => {
         if (select) {
@@ -50,6 +45,46 @@ const ItemCollection = (item: any) => {
         }
     }, [editMode])
 
+    useEffect(() => {
+        if (item.id != 1) {
+            let data: any[] = []
+            let listUrl: any[] = []
+            if (listMusic != undefined || listMusic.length > 0) {
+                listMusic.forEach((element: any) => {
+                    if (element.id_collection == item.id) {
+                        data.push(element)
+                    }
+                })
+            }
+            if (data.length > 1) {
+                for (let i = 0; i < 4; i++) {
+                    if (data[i] != undefined) {
+                        listUrl.push({
+                            id: i,
+                            thumbnail: data[i].thumbnail
+                        })
+                    }
+                    else {
+                        listUrl.push({
+                            id: i,
+                            thumbnail: ''
+                        })
+                    }
+                }
+                setIsOneSong(false)
+            }
+            else {
+                listUrl.push({
+                    id: 0,
+                    thumbnail: data[0] != undefined ? data[0].thumbnail : ''
+                })
+                setIsOneSong(true)
+            }
+
+            setListUrlImage(listUrl)
+        }
+    }, [listMusic])
+
     return (
         <TouchableOpacity
             style={[styles.contain, {}]}
@@ -70,32 +105,27 @@ const ItemCollection = (item: any) => {
             }}
             activeOpacity={0.7}
         >
-          
-                {/* <Image
-                    style={styles.image}
-                    source={(item.thumbnail != '') ? { uri: item.thumbnail } : ImageCollectionDefault}
-                /> */}
-                <FlatList
-                style={styles.imageContain}
-                    data={[{
-                        id: '1',
-                        thumbnail: 'https://znews-photo.zadn.vn/w660/Uploaded/kbd_pilk/2020_10_29/cuc_tinh_y7.jpg'
-                    },
-                    {
-                        id: '2',
-                        thumbnail: 'https://image.thanhnien.vn/768/uploaded/trucdl/2020_07_05/cuctinhy4000namkhongphanbietduocnam20209_tvqo.png'
-                    }, {
-                        id: '3',
-                        thumbnail: 'https://vtv1.mediacdn.vn/thumb_w/650/2020/10/28/12059567612060727831191986025592775057149073o-16038750414991183901705-crop-16039541887031834368998.jpg'
-                    }, {
-                        id: '4',
-                        thumbnail: 'https://i.ytimg.com/vi/0OJSzgrUdec/maxresdefault.jpg'
-                    },
-                    ]}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    numColumns={2}
-                />
+
+            {item.id == 1 ? (
+                <Image
+                                style={styles.imageContain}
+                                source={ImageCollectionDefault}
+                                resizeMode={'cover'}
+                            />            ) : (
+                    <FlatList
+                        style={styles.imageContain}
+                        data={listUrlImage}
+                        renderItem={(item: any) => {                           
+                            return <Image
+                                style={isOneSong?styles.imageContain: styles.image}
+                                source={(item.item.thumbnail != '') ? { uri: item.item.thumbnail } : ImageCollectionDefault}
+                                resizeMode={'cover'}
+                            />
+                        }}
+                        keyExtractor={item => item.id}
+                        numColumns={2}
+                    />
+                )}
 
             <View style={[styles.containOpacity, stylesGeneral.centerAll, { opacity: opacity }]}></View>
 
@@ -150,10 +180,10 @@ const styles = StyleSheet.create({
         opacity: 0.8
     },
     image: {
-        height: (metric.DEVICE_WIDTH / 2 - 24)/2,
-        width: (metric.DEVICE_WIDTH / 2 - 24)/2,
+        height: (metric.DEVICE_WIDTH / 2 - 24) / 2,
+        width: (metric.DEVICE_WIDTH / 2 - 24) / 2,
     },
-    imageContain:{
+    imageContain: {
         height: (metric.DEVICE_WIDTH / 2 - 24),
         width: (metric.DEVICE_WIDTH / 2 - 24),
         borderRadius: 12,

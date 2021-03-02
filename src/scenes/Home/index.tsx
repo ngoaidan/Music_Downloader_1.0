@@ -17,6 +17,7 @@ import YTSearch from '@services/api/youtubeSearch'
 import { ImageMusicDefault } from '@assets/images';
 import metric from '@config/metrics';
 import LinearGradient from 'react-native-linear-gradient';
+import NativeAdmobView from '@services/modules/NativeAdmob';
 
 
 const Home = () => {
@@ -113,7 +114,6 @@ const Home = () => {
                                 </View>
                             </View>) : null}
                         {!loading ? (
-
                             <TouchableOpacity
                                 style={[stylesGeneral.centerAll, styles.button]}
                                 onPress={() => {
@@ -132,6 +132,7 @@ const Home = () => {
                                     // else {
                                     //     videoSearch(textInputValue)
                                     //     setVisiableButtonDownload(false)
+                                    //     Keyboard.dismiss();
                                     // }
 
 
@@ -174,6 +175,7 @@ const Home = () => {
                                     <Text
                                         style={{ color: '#fff', fontSize: 16, marginLeft: 20 }}
                                     >{percentDownloading <= 1 ? Math.round(percentDownloading * 100) : 100} %</Text>
+
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={[styles.buttonCancle]}
@@ -209,6 +211,9 @@ const Home = () => {
                             keyExtractor={(item: any) => item.etag.toString()}
                         />
                     </View>)}
+            </View>
+            <View style={{ height: 100, marginTop: 30, position: 'absolute', bottom: 10, left: 0, width: '100%', alignItems: 'center' }}>
+                <NativeAdmobView style={{ flex: 1, width: '90%' }} />
             </View>
             {errorInternet ? (
                 <View style={{ position: 'absolute', bottom: 0, height: 40, width: metric.DEVICE_WIDTH, marginBottom: 12 }}>

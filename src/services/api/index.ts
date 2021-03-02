@@ -107,9 +107,12 @@ const processButton = (data, dispatch: any) => {
                 priority: 1,
             })
             .begin((expectedBytes) => {
+            console.log("🚀 ~ file: index.ts ~ line 110 ~ .begin ~ expectedBytes", expectedBytes)
+                
                 dispatch(setTaskDownloading(task))
             })
             .progress((percent, bytesWritten, totalBytes) => {
+                dispatch(setTaskDownloading(task))
                 dispatch(setPercent(percent+0.3))
             })
             .done(async () => {
@@ -149,7 +152,7 @@ const processButton = (data, dispatch: any) => {
 const fn_PushNotification = (title, message) => {
     PushNotification.createChannel(
         {
-            channelId: "3",
+            channelId: "4",
             channelName: "My channel",
             channelDescription: "A channel to categorise your notifications",
             playSound: false,
@@ -161,7 +164,7 @@ const fn_PushNotification = (title, message) => {
     );
 
     PushNotification.localNotification({
-        channelId: 3,
+        channelId: 4,
         title: title,
         message: message,
         smallIcon: "ic_notification",
@@ -262,6 +265,8 @@ const fn_crawlData = async (linkVideo) => {
     } catch (err) {
 
     }
+    console.log("🚀 ~ file: index.ts ~ line 269 ~ constfn_crawlData= ~ jsonData", jsonData)
+
     return jsonData;
 }
 

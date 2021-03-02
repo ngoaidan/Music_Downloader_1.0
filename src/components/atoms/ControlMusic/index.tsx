@@ -20,11 +20,15 @@ var repeat;
 var musicPlaying;
 
 export const play = (infoMusicPlaying, setMaxDuration, dispatch, shuffle) => {
+    MusicControl.setNotificationId(11, 'channel')
+    MusicControl.enableBackgroundMode(true);
+
     if (soundTask) soundTask.release()
     soundTask = new Sound(infoMusicPlaying.path, Sound.MAIN_BUNDLE, async (error) => {
         if (error) {
             return;
         }
+
         MusicControl.setNowPlaying({
             title: infoMusicPlaying.name,
             artwork: infoMusicPlaying.thumbnail,
@@ -36,12 +40,12 @@ export const play = (infoMusicPlaying, setMaxDuration, dispatch, shuffle) => {
             notificationIcon: 'my_custom_icon',
             isLiveStream: true,
         })
+        
         MusicControl.enableControl('play', true)
         MusicControl.enableControl('pause', true)
         MusicControl.enableControl('nextTrack', true)
         MusicControl.enableControl('previousTrack', true)
-        MusicControl.enableBackgroundMode(true);
-        MusicControl.handleAudioInterruptions(true);
+        MusicControl.enableControl('changePlaybackPosition', true)
         MusicControl.updatePlayback({ state: MusicControl.STATE_PLAYING })
         MusicControl.enableControl('closeNotification', true, { when: 'always' })
 
