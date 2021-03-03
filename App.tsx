@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Navigator from './src/navigations';
-import { AppState, LogBox, StatusBar, View } from 'react-native';
+import { Alert, AppState, LogBox, StatusBar, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from "./src/services/redux/store"
 import color from '@config/colors';
@@ -12,11 +12,26 @@ import SQLite from "react-native-sqlite-storage";
 import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MusicControl from 'react-native-music-control';
+import messaging from '@react-native-firebase/messaging';
+import { fn_PushNotification } from '@services/api';
+
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 const App = () => {
   LogBox.ignoreLogs(['Warning: ...'])
   LogBox.ignoreAllLogs();
   SQLite.enablePromise(true);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage:any) => {
+      fn_PushNotification(remoteMessage.notification.title,remoteMessage.notification.body)
+    });
+
+    return unsubscribe;
+  }, []);
 
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);

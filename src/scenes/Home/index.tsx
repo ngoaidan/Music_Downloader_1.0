@@ -38,20 +38,51 @@ const Home = () => {
         setTextInputValue(text);
     }
 
-    const [listData, setListData] = useState([])
+    useEffect(() => {
+        console.log("🚀 ~ file: index.tsx ~ line 26 ~ Home ~ loading", loading)
+    }, [])
 
-    const videoSearch = (term) => {
-        YTSearch({ key: 'AIzaSyAr2HPYpQT3clJYN3fkAwBSX-faFYgSXM0', term: term }, (videos) => {
-            if (videos == "error") {
+    const [listData, setListData] = useState<any[]>([])
+
+    const videoSearch = async (term) => {
+        // YTSearch({ key: 'AIzaSyAr2HPYpQT3clJYN3fkAwBSX-faFYgSXM0', term: term }, (videos) => {
+        //     if (videos == "error") {
+        //         dispatch(showErrorInternet(true))
+        //         setTimeout(() => {
+        //             dispatch(showErrorInternet(false))
+        //         }, 10000)
+        //     }
+        //     else {
+        //         console.log("🚀 ~ file: index.tsx ~ line 151 ~ YTSearch ~ videos", videos)
+        //         setListData(videos)
+        //     }
+        // })
+
+        fetch(`https://youtube-v31.p.rapidapi.com/search?q=${term}&part=snippet%2Cid&regionCode=VI&maxResults=10&order=relevance`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-key": "2988ec4b08msh644ff6b330e76a2p111d4bjsn42dfb81245b0",
+                "x-rapidapi-host": "youtube-v31.p.rapidapi.com"
+            }
+        })
+            .then((response: any) => response.json())
+            .then(json => {
+                let data:any[] = []
+                json.items.forEach((element) => {
+                    if(element.id.videoId != undefined){
+                        data.push(element)
+                    }
+                })
+                setListData(data)
+            })
+            .catch(err => {
+
                 dispatch(showErrorInternet(true))
                 setTimeout(() => {
                     dispatch(showErrorInternet(false))
                 }, 10000)
-            }
-            else {
-                setListData(videos)
-            }
-        })
+
+            });
     }
 
     useEffect(() => {
@@ -118,39 +149,39 @@ const Home = () => {
                                 style={[stylesGeneral.centerAll, styles.button]}
                                 onPress={() => {
 
-                                    // // download
-                                    // if (videoSelect != null) {
-                                    //     Keyboard.dismiss()
-                                    //     if (textInputValue != '') {
-                                    //         fn_GetAPI(videoSelect.id.videoId, dispatch)
-                                    //         setTextInputValue('')
-                                    //         setVideoSelect(null)
-                                    //         dispatch(showLoading(true))
-                                    //     }
-                                    // }
-                                    // // search
-                                    // else {
-                                    //     videoSearch(textInputValue)
-                                    //     setVisiableButtonDownload(false)
-                                    //     Keyboard.dismiss();
-                                    // }
-
-
-                                    if (!loading) {
+                                    // download
+                                    if (videoSelect != null) {
                                         Keyboard.dismiss()
                                         if (textInputValue != '') {
-                                            fn_GetAPI(textInputValue, dispatch)
+                                            fn_GetAPI(videoSelect.id.videoId, dispatch)
                                             setTextInputValue('')
                                             setVideoSelect(null)
                                             dispatch(showLoading(true))
                                         }
                                     }
+                                    // search
                                     else {
-                                        setShowAlertProcessing(true)
-                                        setTimeout(() => {
-                                            setShowAlertProcessing(false)
-                                        }, 5000)
+                                        videoSearch(textInputValue)
+                                        setVisiableButtonDownload(false)
+                                        Keyboard.dismiss();
                                     }
+
+
+                                    // if (!loading) {
+                                    //     Keyboard.dismiss()
+                                    //     if (textInputValue != '') {
+                                    //         fn_GetAPI(textInputValue, dispatch)
+                                    //         setTextInputValue('')
+                                    //         setVideoSelect(null)
+                                    //         dispatch(showLoading(true))
+                                    //     }
+                                    // }
+                                    // else {
+                                    //     setShowAlertProcessing(true)
+                                    //     setTimeout(() => {
+                                    //         setShowAlertProcessing(false)
+                                    //     }, 5000)
+                                    // }
                                 }}
                             >
                                 <View style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%', flex: 1 }}>
@@ -184,7 +215,6 @@ const Home = () => {
                                             fn_stop()
                                         }
                                         catch {
-
                                         }
                                         dispatch(setPercent(0))
                                         dispatch(showLoading(false))
@@ -208,7 +238,11 @@ const Home = () => {
                                     <ItemMusicSearch data={item} index={index} />
                                 </TouchableWithoutFeedback>
                             )}
-                            keyExtractor={(item: any) => item.etag.toString()}
+                            keyExtractor={(item: any) => {
+                                console.log("🚀 ~ file: index.tsx ~ line 243 ~ Home ~ item", item)
+
+                                return item.id.videoId.toString()
+                            }}
                         />
                     </View>)}
             </View>

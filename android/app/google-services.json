@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "681262693032",
+    "project_id": "musicdownloader-50e74",
+    "storage_bucket": "musicdownloader-50e74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681262693032:android:5bf7819ed422ba0a23a09d",
+        "android_client_info": {
+          "package_name": "com.btechmusicdownloader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681262693032-drmd0be1h41jsecs8qgkg75i4s72u5sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD1dPZ4okpgqbVe6FdJ6OflowIp1Jr5AY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681262693032-drmd0be1h41jsecs8qgkg75i4s72u5sr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

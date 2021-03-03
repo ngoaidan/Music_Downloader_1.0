@@ -39,11 +39,22 @@ const fn_GetAPI = async (link, dispatch: any) => {
     //         dispatch(showErrorInternet(true))
     //     });
 
+    //  await fetch(API_DOWN + linkVideo)
+    //     .then((response) => response.json())
+    //     .then((json) => {
+    //         processButton(json,dispatch)
+    //     })
+    //     .catch(() => {
+    //         dispatch(showLoading(false))
+    //         dispatch(showErrorInternet(true))
+    //     });
+    console.log("🚀 ~ file: index.ts ~ line 89 ~ constfn_GetAPI= ~ linkVideo", linkVideo)
+
+    
     try {
-        let res = await fn_crawlData(link);
+        let res = await fn_crawlData(linkVideo);
         processButton(res, dispatch)
         dispatch(setPercent(0.3))
-
     }
     catch {
         dispatch(showLoading(false))
@@ -265,7 +276,6 @@ const fn_crawlData = async (linkVideo) => {
     } catch (err) {
 
     }
-    console.log("🚀 ~ file: index.ts ~ line 269 ~ constfn_crawlData= ~ jsonData", jsonData)
 
     return jsonData;
 }
