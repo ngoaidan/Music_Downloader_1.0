@@ -6,6 +6,7 @@ import color from '@config/colors';
 import stylesGeneral from "@config/stylesGeneral"
 import ControlMusic from '../ControlMusic';
 import { useSelector, useDispatch } from 'react-redux';
+import IconCollection from '@assets/svg/collection';
 
 const CustomTabBar = ({ state, descriptors, navigation }) => {
     const showMusic = useSelector((state: any) => state?.showMusic)
@@ -51,7 +52,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                                 break
                             }
                             case 2: {
-                                icon = <IconSetting
+                                icon = <IconCollection
                                     background={isFocused ? color.BG_ICON_TAB : color.BG_BUTTON}
                                     color={isFocused ? color.IC_FOCUS : color.IC_DISABLE} />
                                 break

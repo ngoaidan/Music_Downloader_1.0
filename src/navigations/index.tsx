@@ -1,8 +1,8 @@
 import React, { Component, useEffect, useState } from 'react';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { COLLECTIONS, COLLECTIONSTACK, HOME, LISTMUSIC, PLAYMUSIC, SETTINGS, TABNAVIGATION } from '@config/constrans';
-import { Collection, Home, ListMusic, PlayMusic, Settings } from '@scenes';
+import { COLLECTIONS, COLLECTIONSTACK, HOME, LISTCOLLECTIONTAB, LISTMUSIC, PLAYMUSIC, SETTINGS, TABNAVIGATION } from '@config/constrans';
+import { Collection, Home, ListMusic, ListMusicTab, PlayMusic, Settings } from '@scenes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomTabBar } from '@components/atoms';
 import Animated, { Easing } from 'react-native-reanimated';
@@ -45,10 +45,9 @@ const TabStack = () => {
     return (
         <Tab.Navigator tabBar={(props: any) => <CustomTabBar {...props} />}>
             <Tab.Screen name={HOME} component={Home} ></Tab.Screen>
+            <Tab.Screen name={LISTCOLLECTIONTAB} component={ListMusicTab}></Tab.Screen>
             <Tab.Screen name={COLLECTIONSTACK} component={CollectionStack}></Tab.Screen>
-            <Tab.Screen name={SETTINGS} component={Settings}></Tab.Screen>
         </Tab.Navigator>
-
     )
 }
 

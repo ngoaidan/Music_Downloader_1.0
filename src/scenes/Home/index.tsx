@@ -14,7 +14,7 @@ import { trans } from "@services/i18n"
 import ItemMusic from '@components/atoms/ItemMusic';
 import ItemMusicSearch from '@components/atoms/ItemMusicSearch';
 import YTSearch from '@services/api/youtubeSearch'
-import { ImageMusicDefault } from '@assets/images';
+import { BackgroundHome, ImageMusicDefault } from '@assets/images';
 import metric from '@config/metrics';
 import LinearGradient from 'react-native-linear-gradient';
 import NativeAdmobView from '@services/modules/NativeAdmob';
@@ -67,9 +67,9 @@ const Home = () => {
         })
             .then((response: any) => response.json())
             .then(json => {
-                let data:any[] = []
+                let data: any[] = []
                 json.items.forEach((element) => {
-                    if(element.id.videoId != undefined){
+                    if (element.id.videoId != undefined) {
                         data.push(element)
                     }
                 })
@@ -246,9 +246,16 @@ const Home = () => {
                         />
                     </View>)}
             </View>
+            <View style={{ position: 'absolute', bottom: 0, left: 0 }}>
+                <Image
+                    style={{ width: metric.DEVICE_WIDTH }}
+                    source={BackgroundHome}
+                />
+            </View>
             <View style={{ height: 100, marginTop: 30, position: 'absolute', bottom: 10, left: 0, width: '100%', alignItems: 'center' }}>
                 <NativeAdmobView style={{ flex: 1, width: '90%' }} />
             </View>
+
             {errorInternet ? (
                 <View style={{ position: 'absolute', bottom: 0, height: 40, width: metric.DEVICE_WIDTH, marginBottom: 12 }}>
                     <View style={{ flex: 1, marginHorizontal: 40, backgroundColor: color.BG_TOAST_ERROR, borderRadius: 20, alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16 }}>
