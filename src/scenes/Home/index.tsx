@@ -18,6 +18,7 @@ import { BackgroundHome, ImageMusicDefault } from '@assets/images';
 import metric from '@config/metrics';
 import LinearGradient from 'react-native-linear-gradient';
 import NativeAdmobView from '@services/modules/NativeAdmob';
+import PopupUpdateVersion from '@components/atoms/PopupUpdateVersion';
 
 
 const Home = () => {
@@ -32,15 +33,10 @@ const Home = () => {
     const [textInputValue, setTextInputValue] = useState('')
     const [videoSelect, setVideoSelect] = useState<any>(null)
     const [showAlertProcessing, setShowAlertProcessing] = useState<any>(false)
-
     const fetchCopiedText = async () => {
         const text = await Clipboard.getString();
         setTextInputValue(text);
     }
-
-    useEffect(() => {
-        console.log("🚀 ~ file: index.tsx ~ line 26 ~ Home ~ loading", loading)
-    }, [])
 
     const [listData, setListData] = useState<any[]>([])
 
@@ -54,11 +50,11 @@ const Home = () => {
         //     }
         //     else {
         //         console.log("🚀 ~ file: index.tsx ~ line 151 ~ YTSearch ~ videos", videos)
-        //         setListData(videos)
+        //         //setListData(videos)
         //     }
         // })
 
-        fetch(`https://youtube-v31.p.rapidapi.com/search?q=${term}&part=snippet%2Cid&regionCode=VI&maxResults=10&order=relevance`, {
+        fetch(`https://youtube-v31.p.rapidapi.com/search?q=Music ${term}&part=snippet%2Cid&regionCode=VI&maxResults=10&order=viewCount`, {
             "method": "GET",
             "headers": {
                 "x-rapidapi-key": "2988ec4b08msh644ff6b330e76a2p111d4bjsn42dfb81245b0",
@@ -76,12 +72,10 @@ const Home = () => {
                 setListData(data)
             })
             .catch(err => {
-
                 dispatch(showErrorInternet(true))
                 setTimeout(() => {
                     dispatch(showErrorInternet(false))
-                }, 10000)
-
+                }, 5000)
             });
     }
 
@@ -96,11 +90,38 @@ const Home = () => {
         }
     }, [textInputValue])
 
+    useEffect(() => {
+        setTimeout(() => {
+            dispatch(showErrorInternet(false))
+        }, 5000)
+    }, [errorInternet])
+
+    useEffect(() => {
+        console.log("🚀 ~ file: index.tsx ~ line 103 ~ Home ~ loading", loading)
+    }, [loading])
+
     return (
         <View style={stylesGeneral.container}>
-            <Header title={trans('download_music', language)} paddingLeft={24} buttonRight={false} />
+            <Header title={trans('download_music', language)} paddingLeft={24} buttonRight={false} home={true} />
 
-            <View style={[styles.cardView, { height: visiableButtonDownload ? (videoSelect != null ? 302 : 156) : 354 }]}>
+            <View style={{ position: 'absolute', bottom: 0, left: 0 }}>
+                <Image
+                    resizeMode={'stretch'}
+                    style={{ width: metric.DEVICE_WIDTH }}
+                    source={BackgroundHome}
+                />
+            </View>
+            <View style={[styles.cardView, { height: visiableButtonDownload ? (videoSelect != null ? 302 : 156) : 354}]}>
+                <View style={{ 
+                    position:'absolute',
+                    top:0,
+                    bottom:0,
+                    height: visiableButtonDownload ? (videoSelect != null ? 302 : 156) : 354,
+                    width:metric.DEVICE_WIDTH-16*3,
+                    opacity:0.5,
+                    backgroundColor:color.BG_CARD,
+                    borderRadius:24
+                }}></View>
                 <View style={styles.containInput}>
                     <TextInput
                         textAlignVertical={'center'}
@@ -113,7 +134,8 @@ const Home = () => {
                         value={textInputValue}
                         onChangeText={(value) => setTextInputValue(value)}
                     />
-                    <TouchableOpacity
+
+                    {/* <TouchableOpacity
                         style={[stylesGeneral.centerAll, styles.containIconPaste]}
                         onPress={() => {
                             Keyboard.dismiss()
@@ -121,7 +143,7 @@ const Home = () => {
                         }}
                     >
                         <IconPaste />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 {visiableButtonDownload ?
                     (<View style={{ flexDirection: 'column', flex: 1 }}>
@@ -148,6 +170,7 @@ const Home = () => {
                             <TouchableOpacity
                                 style={[stylesGeneral.centerAll, styles.button]}
                                 onPress={() => {
+                                    console.log('search')
 
                                     // download
                                     if (videoSelect != null) {
@@ -194,6 +217,7 @@ const Home = () => {
                                 <TouchableOpacity
                                     style={[styles.buttonLoading]}
                                     onPress={() => {
+                                        console.log('search')
                                         setShowAlertProcessing(true)
                                         setTimeout(() => {
                                             setShowAlertProcessing(false)
@@ -231,27 +255,21 @@ const Home = () => {
                         <FlatList
                             data={listData}
                             renderItem={({ item, index }) => (
-                                <TouchableWithoutFeedback onPress={() => {
+                                <TouchableOpacity onPress={() => {
+                                    console.log('press')
                                     setVideoSelect(item)
                                     setVisiableButtonDownload(true)
                                 }}>
                                     <ItemMusicSearch data={item} index={index} />
-                                </TouchableWithoutFeedback>
+                                </TouchableOpacity>
                             )}
                             keyExtractor={(item: any) => {
-                                console.log("🚀 ~ file: index.tsx ~ line 243 ~ Home ~ item", item)
-
                                 return item.id.videoId.toString()
                             }}
                         />
                     </View>)}
             </View>
-            <View style={{ position: 'absolute', bottom: 0, left: 0 }}>
-                <Image
-                    style={{ width: metric.DEVICE_WIDTH }}
-                    source={BackgroundHome}
-                />
-            </View>
+
             <View style={{ height: 100, marginTop: 30, position: 'absolute', bottom: 10, left: 0, width: '100%', alignItems: 'center' }}>
                 <NativeAdmobView style={{ flex: 1, width: '90%' }} />
             </View>
@@ -281,11 +299,11 @@ const styles = StyleSheet.create({
     cardView: {
         marginHorizontal: 24,
         borderRadius: 24,
-        backgroundColor: color.BG_CARD,
+        // backgroundColor: "none",
         marginTop: 27,
         paddingTop: 24,
         paddingBottom: 34,
-        paddingHorizontal: 16
+        paddingHorizontal: 16,
     },
     title: {
         fontSize: 16,

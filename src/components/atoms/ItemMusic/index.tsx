@@ -5,10 +5,13 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { CheckBox } from 'react-native-elements'
 import { useSelector, useDispatch } from 'react-redux';
-import { addItemMusicEdit, removeItemMusicEdit, setEditMode, setIndexPlaying, setInfoMusicPlaying, showMusicControl } from '@services/redux/actions';
+import { addItemMusicEdit, loadMusic, removeItemMusicEdit, setEditMode, setIndexPlaying, setInfoMusicPlaying, showMusicControl } from '@services/redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
 import { isDuration } from 'moment';
+import IconHeart from '@assets/svg/heart';
+import { dboMusic } from '@services/sqlite';
+import IconHeartOutline from '@assets/svg/heartOutline';
 
 const ItemMusic = (item: any) => {
     const navigation = useNavigation();
@@ -25,11 +28,11 @@ const ItemMusic = (item: any) => {
         }
     }, [select])
 
-    useEffect(()=>{
-        if(!editMode){
+    useEffect(() => {
+        if (!editMode) {
             setSelect(false)
         }
-    },[editMode])
+    }, [editMode])
 
     return (
         <TouchableOpacity
@@ -70,7 +73,7 @@ const ItemMusic = (item: any) => {
                 />
             </View>) : null}
             <View
-                style={{ flexDirection: 'row', borderBottomWidth: 1, alignItems: 'center', flex: 1, borderColor: color.LINE }}
+                style={{ flexDirection: 'row', borderBottomWidth: 1, alignItems: 'center', width: '90%', borderColor: color.LINE }}
             >
                 <View style={styles.image}>
                     <Image
@@ -81,9 +84,38 @@ const ItemMusic = (item: any) => {
                 <Text
                     numberOfLines={2}
                     ellipsizeMode="tail"
-                    style={styles.title}
+                    style={[styles.title]}
                 >{item.data.name}</Text>
+                {editMode ? null : (
+                    <TouchableOpacity
+                        style={{
+                            height: 40, width: 40, justifyContent: 'center', alignItems: 'flex-end'
+                        }}
+                        onPress={() => {
+                            if (item.data.like == 1) {
+                                dboMusic.ChangeStatus(item.data.id, 0).then(res => {
+                                    dboMusic.SelectAll().then(res => {
+                                        dispatch(loadMusic(res))
+                                    })
+                                })
+                                dboMusic.DeleteMusicInFavourist(item.data.id)
+                            }
+                            else {
+                                dboMusic.ChangeStatus(item.data.id, 1).then(res => {
+                                    dboMusic.SelectAll().then(res => {
+                                        dispatch(loadMusic(res))
+                                    })
+                                })
+                                dboMusic.MoveCollection(item.data.id, 2)
+                            }
+                        }}
+                    >
+                        {item.data.like == 1 ? <IconHeart /> : <IconHeartOutline />}
+                    </TouchableOpacity>)}
+
+
             </View>
+
         </TouchableOpacity>
     );
 }
@@ -104,8 +136,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: color.TITLE,
-        marginLeft: 12,
-        marginRight: 80
+        width: '70%',
+        marginLeft: 10
     }
 })
 

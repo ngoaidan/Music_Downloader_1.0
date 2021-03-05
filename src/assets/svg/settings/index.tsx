@@ -9,10 +9,10 @@ import ShadowView from 'react-native-simple-shadow-view'
 
 const IconSetting = (props: any) => {
     return (
-        <ShadowView style={[styles.shadowView,{ backgroundColor: props.background}]}>
+        <ShadowView style={[styles.shadowView]}>
             <Svg
-                width="32"
-                height="32"
+                width="24"
+                height="24"
                 fill="none"
                 viewBox="0 0 32 32"
             >

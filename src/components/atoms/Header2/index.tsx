@@ -19,7 +19,6 @@ const Header2 = (props: any) => {
                 <IconBack />
             </TouchableOpacity>) : null}
 
-
             <Text style={styles.title}>{props.title}</Text>
 
             {editMode ?

@@ -10,6 +10,8 @@ interface Music {
 	quality: String,
 	size: String,
 	status: boolean,
+	like: number,
+	view:number,
     id_collection: number,
     path:String
 }

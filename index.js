@@ -8,6 +8,7 @@ import { name as appName } from './app.json';
 
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
+import AsyncStorage from '@react-native-community/async-storage';
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -19,6 +20,12 @@ PushNotification.configure({
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
         console.log("NOTIFICATION:", notification);
+        if (notification.data.type == 'version') {
+            AsyncStorage.setItem('checkVersion', notification.data.data)
+        }
+        else if (notification.data.type == 'link') {
+            AsyncStorage.setItem('link_chplay', notification.data.data)
+        }
         // process the notification
         // (required) Called when a remote is received or opened, or local notification is opened
         notification.finish(PushNotificationIOS.FetchResult.NoData);
@@ -56,5 +63,18 @@ PushNotification.configure({
      */
     requestPermissions: true,
 });
+
+PushNotification.createChannel(
+    {
+        channelId: "1",
+        channelName: "My channel",
+        channelDescription: "A channel to categorise your notifications",
+        playSound: true,
+        soundName: "default",
+        importance: 1,
+        vibrate: true,
+    },
+    (created) => console.log(`createChannel returned '${created}'`)
+);
 
 AppRegistry.registerComponent(appName, () => App);

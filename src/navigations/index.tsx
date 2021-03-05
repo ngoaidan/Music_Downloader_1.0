@@ -16,6 +16,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const StackCollection = createStackNavigator();
+import DeviceInfo from 'react-native-device-info';
+import { Alert } from 'react-native';
 
 
 const CollectionStack = () => {
@@ -80,6 +82,7 @@ const Navigator = () => {
         })
     }, [])
 
+
     const loadData = () => {
         dboCollection.SelectAll().then((res: any) => {
             dispatch(loadCollection(res))
@@ -98,7 +101,7 @@ const Navigator = () => {
         })
         let task4 = dboMusic.CreateTable().then((res: any) => {
         })
-        
+
         let task2 = dboCollection.InsertItem({ name: "Download", thumbnail: "" }).then((res: any) => {
             if (res.status == 200) {
                 console.log('Insert collection success')
@@ -148,19 +151,24 @@ const Navigator = () => {
                     screenOptions={{
                         gestureEnabled: true,
                         gestureDirection: 'horizontal',
-                        
+
                     }}>
                     <Stack.Screen name={TABNAVIGATION} component={TabStack}></Stack.Screen>
+                    <Stack.Screen name={SETTINGS} component={Settings} options={{
+                        gestureEnabled: true,
+                        gestureDirection: 'horizontal',
+                        animationEnabled: false
+                    }} ></Stack.Screen>
                     <Stack.Screen
                         name={PLAYMUSIC}
                         component={PlayMusic}
                         options={{
                             gestureEnabled: true,
                             gestureDirection: 'horizontal',
-                            animationEnabled:false
-                        }} 
-                        
-                        ></Stack.Screen>
+                            animationEnabled: false
+                        }}
+
+                    ></Stack.Screen>
                 </Stack.Navigator>
             </NavigationContainer>
         )

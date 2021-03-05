@@ -10,6 +10,8 @@ interface MusicTable {
 	quality: String,
 	size: String,
 	status: boolean,
+	like: number,
+	view: number,
 	id_collection: number,
 	path: String
 }
@@ -24,6 +26,8 @@ const CreateTable = () => {
           	quality VARCHAR(10),
           	size VARCHAR(255),
           	status BOOL,
+			like INTEGER,
+			view INTEGER,
 			id_collection INTEGER,
 			path VARCHAR(255),
          	FOREIGN KEY (id_collection) REFERENCES Collection(id)
@@ -46,12 +50,12 @@ const CreateTable = () => {
 }
 
 const InsertItem = (props: MusicTable) => {
-	let query = `INSERT INTO Music (name,thumbnail,duration,quality,size,status,id_collection,path) VALUES (?,?,?,?,?,?,?,?);`;
+	let query = `INSERT INTO Music (name,thumbnail,duration,quality,size,status,like,view,id_collection,path) VALUES (?,?,?,?,?,?,?,?,?,?);`;
 
 	return new Promise((resolve, reject) => {
 		SQLite.openDatabase({ name: DATABASE_NAME })
 			.then((res) => {
-				res.executeSql(query, [props.name, props.thumbnail, props.duration, props.quality, props.size, props.status, props.id_collection, props.path])
+				res.executeSql(query, [props.name, props.thumbnail, props.duration, props.quality, props.size, props.status, props.like, props.view, props.id_collection, props.path])
 					.then(() => {
 						resolve({ status: 200 })
 					})
@@ -124,6 +128,84 @@ const MoveCollection = (id: number, id_collection: number) => {
 			})
 			.catch(() => {
 				reject({ status: 500, error: "Error insert database" })
+			})
+	})
+}
+
+const DeleteMusicInFavourist = (id: number) => {
+	let query = 'UPDATE Music SET id_collection = ? WHERE ID = ?;';
+	return new Promise((resolve, reject) => {
+		SQLite.openDatabase({ name: DATABASE_NAME })
+			.then((res) => {
+				res.executeSql(query, [1, id])
+					.then(() => {
+						resolve({ status: 200 })
+					})
+					.catch(() => {
+						reject({ status: 500, error: "Error insert database" })
+					})
+			})
+			.catch(() => {
+				reject({ status: 500, error: "Error insert database" })
+			})
+	})
+}
+
+const ChangeStatus = (id: number, status: number) => {
+	let query = 'UPDATE Music SET like = ? WHERE ID = ?;';
+	return new Promise((resolve, reject) => {
+		SQLite.openDatabase({ name: DATABASE_NAME })
+			.then((ref) => {
+				ref.executeSql(query, [status, id])
+					.then((res) => {
+						ref.transaction((tx) => {
+							tx.executeSql('SELECT * FROM Music WHERE ID = ?', [id])
+								.then(([tx, result]) => {
+									let data: any[] = []
+									for (let i = 0; i < result.rows.length; i++) {
+										let row = result.rows.item(i);
+										data.push(row)
+									}
+									resolve(data)
+								}).catch(err => {
+									reject({ status: 500, error: "Error select database" })
+								})
+						}).catch(err => {
+							reject({ status: 500, error: "Error select database" })
+						})
+						//resolve({ status: 200,data:res })
+					})
+					.catch(() => {
+						reject({ status: 500, error: "Error insert database" })
+					})
+			})
+			.catch(() => {
+				reject({ status: 500, error: "Error insert database" })
+			})
+	})
+}
+
+const SelectByID = (id:number) => {
+	return new Promise((resolve, reject) => {
+		SQLite.openDatabase({ name: DATABASE_NAME })
+			.then((res) => {
+				res.transaction((tx) => {
+					tx.executeSql('SELECT * FROM Music WHERE ID = ?', [id])
+						.then(([tx, result]) => {
+							let data: any[] = []
+							for (let i = 0; i < result.rows.length; i++) {
+								let row = result.rows.item(i);
+								data.push(row)
+							}
+							resolve(data)
+						}).catch(err => {
+							reject({ status: 500, error: "Error select database" })
+						})
+				}).catch(err => {
+					reject({ status: 500, error: "Error select database" })
+				})
+			}).catch(err => {
+				reject({ status: 500, error: "Error select database" })
 			})
 	})
 }
@@ -215,7 +297,10 @@ const dboMusic = {
 	Rename,
 	DeleteItem,
 	MoveCollection,
-	DeleteItemByCollectionID
+	DeleteItemByCollectionID,
+	ChangeStatus,
+	DeleteMusicInFavourist,
+	SelectByID
 }
 
 export default dboMusic;

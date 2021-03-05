@@ -1,3 +1,4 @@
+import { IconBack } from '@assets/svg';
 import Header from '@components/atoms/Header';
 import PopupSelectLanguage from '@components/atoms/PopupSelectLanguage';
 import color from '@config/colors';
@@ -11,10 +12,13 @@ import SendIntentAndroid from 'react-native-send-intent';
 import ShadowView from 'react-native-simple-shadow-view'
 import Svg, { Path } from 'react-native-svg';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Settings = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
+
     const [showPopupChangeLanguage, setShowPopupChangeLanguage] = useState(false)
     const language = useSelector((state: any) => state?.settings.language)
 
@@ -37,13 +41,23 @@ const Settings = () => {
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(showTabbar(false))
-    },[])
+    }, [])
 
     return (
         <View style={stylesGeneral.container}>
-            <Header title={trans('settings',language)} paddingLeft={16} />
+            {/* <Header title={trans('settings',language)} paddingLeft={16} /> */}
+
+            <View style={[styles.containerHeader]}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <IconBack />
+                </TouchableOpacity>
+
+                <Text style={styles.titleHeader}>{trans('settings', language)}</Text>
+
+            </View>
+
             <PopupSelectLanguage setVisiable={setShowPopupChangeLanguage} visiable={showPopupChangeLanguage} />
             <View style={styles.shadowView}>
                 <View style={styles.optionBg}>
@@ -54,7 +68,7 @@ const Settings = () => {
                 </View>
                 <View style={styles.line} />
                 <TouchableOpacity style={styles.optionBg}
-                   onPress={() => { onShare() }}
+                    onPress={() => { onShare() }}
                 >
                     <Text style={styles.textOption}>{trans('settings2', language)}</Text>
                     <View style={styles.icon}>
@@ -70,9 +84,9 @@ const Settings = () => {
                 </TouchableOpacity>
                 <View style={styles.line} />
                 <TouchableOpacity style={styles.optionBg}
-                onPress={()=>{
-                    SendIntentAndroid.sendMail("duyennguyen0285@gmail.com", "[Feedback][APP-DownloadMusic] ", "");
-                }}
+                    onPress={() => {
+                        SendIntentAndroid.sendMail("duyennguyen0285@gmail.com", "[Feedback][APP-DownloadMusic] ", "");
+                    }}
                 >
                     <Text style={styles.textOption}>{trans('settings3', language)}</Text>
                     <View style={styles.icon}>
@@ -175,7 +189,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 5,
         shadowOffset: { width: 1, height: 2 },
-    }
+    },
+    titleHeader: {
+        fontSize: 24,
+        color: color.TITLE,
+        fontWeight: 'bold',
+        marginLeft:16
+    },
+    containerHeader: {
+        marginTop: 19,
+        height: 30,
+        width: metric.DEVICE_WIDTH,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        paddingHorizontal:16
+    },
 })
 
 export default Settings;

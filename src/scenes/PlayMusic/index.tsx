@@ -10,15 +10,18 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import MusicControl, { Command } from 'react-native-music-control';
 import Sound from 'react-native-sound';
 import { useSelector, useDispatch } from 'react-redux';
-import { setListMusciPlaying, setRepeat, setShuffle, setSound, setSoundStatus, showMusicControl } from '@services/redux/actions';
+import { loadMusic, setListMusciPlaying, setRepeat, setShuffle, setSound, setSoundStatus, showMusicControl } from '@services/redux/actions';
 import ItemMusicInPlayMusic from '@components/atoms/ItemMusicInPlayMusic';
 import { ImageMusicDefault } from '@assets/images';
 import { play, pause, resume, next, previous } from '@components/atoms/ControlMusic'
 import IconRepeatOne from '@assets/svg/repeat1';
 import { BackHandler } from 'react-native';
+import { dboMusic } from '@services/sqlite';
+import IconHeart from '@assets/svg/heart';
+import IconHeartOutline from '@assets/svg/heartOutline';
 
-const renderItem = ({ item,index }) => (
-    <ItemMusicInPlayMusic data={item} index={index}/>
+const renderItem = ({ item, index }) => (
+    <ItemMusicInPlayMusic data={item} index={index} />
 );
 
 const PlayMusic = () => {
@@ -50,7 +53,7 @@ const PlayMusic = () => {
 
     return (
         <View style={[stylesGeneral.container, { alignItems: 'center', flexDirection: 'column' }]}>
-            <Header3 />
+            <Header3 infoMusicPlaying={infoMusicPlaying} />
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, padding: 16 }}>
                 <View style={{ backgroundColor: 'yellow', height: 100, width: 100, marginLeft: 8, borderRadius: 12 }}>
                     <Image
@@ -58,14 +61,44 @@ const PlayMusic = () => {
                         source={(infoMusicPlaying.thumbnail != '') ? { uri: infoMusicPlaying.thumbnail } : ImageMusicDefault}
                     />
                 </View>
-                <View style={{ height: 100, flex: 1, marginLeft: 16, padding: 8 }}>
+                <View style={{ height: 100, flex: 1, marginLeft: 16, padding: 8, flexDirection: 'column' }}>
                     <Text
-                        numberOfLines={3}
+                        numberOfLines={2}
                         ellipsizeMode="tail"
                         style={{ fontSize: 16, color: color.TITLE, fontWeight: 'bold' }}
                     >
                         {infoMusicPlaying?.name}</Text>
+
+                    {/* <TouchableOpacity
+                        style={{
+                            justifyContent:'center',
+                            alignItems:'center',
+                            // backgroundColor:color.BG_CARD,
+                            borderRadius:4
+                        }}
+                        onPress={() => {
+                            if (statusLike == 1) {
+                                dboMusic.ChangeStatus(infoMusicPlaying.id, 0).then(res => {
+                                    dboMusic.SelectAll().then(res => {
+                                        dispatch(loadMusic(res))
+                                    })
+                                })
+                                dboMusic.DeleteMusicInFavourist(infoMusicPlaying.id)
+                            }
+                            else {
+                                dboMusic.ChangeStatus(infoMusicPlaying.id, 1).then(res => {
+                                    dboMusic.SelectAll().then(res => {
+                                        dispatch(loadMusic(res))
+                                    })
+                                })
+                                dboMusic.MoveCollection(infoMusicPlaying.id, 2)
+                            }
+                        }}
+                    >
+                        {statusLike == 1 ? <IconHeart /> : <IconHeartOutline />}
+                    </TouchableOpacity> */}
                 </View>
+
             </View>
 
 

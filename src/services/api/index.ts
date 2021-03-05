@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import PushNotification from "react-native-push-notification";
 import cheerio from "cheerio-without-node-native"
 import { PLAYMUSIC } from '@config/constrans';
-import {navigate} from '@navigations/rootNavigation'
+import { navigate } from '@navigations/rootNavigation'
 
 const API_DOWN = "https://downloader28.banabatech.com/oldtest.php?url=";
 const YT = "https://www.youtube.com/watch?v="
@@ -48,9 +48,7 @@ const fn_GetAPI = async (link, dispatch: any) => {
     //         dispatch(showLoading(false))
     //         dispatch(showErrorInternet(true))
     //     });
-    console.log("🚀 ~ file: index.ts ~ line 89 ~ constfn_GetAPI= ~ linkVideo", linkVideo)
 
-    
     try {
         let res = await fn_crawlData(linkVideo);
         processButton(res, dispatch)
@@ -91,7 +89,6 @@ const processButton = (data, dispatch: any) => {
         }
     });
 
-    console.log("qua")
     if (listDataAudio.length > 0) {
 
         let id = fn_GetRandomID(10000000000)
@@ -105,6 +102,8 @@ const processButton = (data, dispatch: any) => {
             id_collection: 1,
             quality: listDataAudio[0].quality,
             size: size,
+            like: 0,
+            view: 0,
             status: true,
             thumbnail: thumbnail,
             path: path
@@ -118,36 +117,30 @@ const processButton = (data, dispatch: any) => {
                 priority: 1,
             })
             .begin((expectedBytes) => {
-            console.log("🚀 ~ file: index.ts ~ line 110 ~ .begin ~ expectedBytes", expectedBytes)
-                
                 dispatch(setTaskDownloading(task))
             })
             .progress((percent, bytesWritten, totalBytes) => {
                 dispatch(setTaskDownloading(task))
-                dispatch(setPercent(percent+0.3))
+                dispatch(setPercent(percent + 0.3))
             })
             .done(async () => {
                 dispatch(setTaskDownloading(task))
                 dispatch(showLoading(false))
                 await dboMusic.InsertItem(infoMusic).then(async res => {
-                    await dboMusic.SelectAll().then((res:any) => {
+                    await dboMusic.SelectAll().then((res: any) => {
                         dispatch(loadMusic(res))
-                        dispatch(showLoading(false))
                         fn_PushNotification("Finished downloading", `The video ${title} has finished downloading`)
                         dispatch(setPercent(0))
                         dispatch(setIndexPlaying(res.length - 1))
                         dispatch(setInfoMusicPlaying(infoMusic))
                         dispatch(showMusicControl(true))
                         dispatch(setCurrentIDCollectionSelect(1))
-                        navigate(PLAYMUSIC,{})
                     })
-                   
                 }).catch((err) => {
                 })
             })
             .error((error: any) => {
                 dispatch(setPercent(0))
-
                 dispatch(showLoading(false))
                 dispatch(showErrorInternet(true))
             })
@@ -166,7 +159,7 @@ const fn_PushNotification = (title, message) => {
             channelId: "4",
             channelName: "My channel",
             channelDescription: "A channel to categorise your notifications",
-            playSound: false,
+            playSound: true,
             soundName: "default",
             importance: 4,
             vibrate: true,
@@ -192,8 +185,18 @@ const fn_crawlData = async (linkVideo) => {
         const htmlString = await response.text();
         const $ = cheerio.load(htmlString);
         const liList = $('script')
-        const stringData = liList[2].children[0].data
-        let apiKey = stringData.split(";", 2);
+        let keyString = ''
+        for (let i = 0; i < liList.length; i++) {
+            if (liList[i].children.length > 0) {
+                let text = 'apikey'
+                let result = liList[i].children[0].data.toLocaleLowerCase().search(text.toLocaleLowerCase())
+                if (result > -1) {
+                    keyString = liList[i].children[0].data;
+                }
+            }
+        }
+        // const stringData = liList[2].children[0].data
+        let apiKey = keyString.split(";", 2);
         let key = apiKey[1].substr(5, apiKey[1].length - 6);
         const response1 = await fetch("https://ymp4.download/", {
             "headers": {

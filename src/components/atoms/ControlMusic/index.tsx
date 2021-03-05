@@ -6,7 +6,7 @@ import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIndexPlaying, setInfoMusicPlaying, setSoundStatus } from '@services/redux/actions';
+import { loadMusic, setIndexPlaying, setInfoMusicPlaying, setSoundStatus } from '@services/redux/actions';
 import Sound from 'react-native-sound';
 import { isDuration } from 'moment';
 import { ImageMusicDefault } from '@assets/images';
@@ -14,6 +14,9 @@ import MusicControl, { Command } from 'react-native-music-control'
 import { fn_GetRandomID } from '@services/api';
 import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
+import IconHeart from '@assets/svg/heart';
+import { dboMusic } from '@services/sqlite';
+import IconHeartOutline from '@assets/svg/heartOutline';
 
 var soundTask;
 var repeat;
@@ -40,7 +43,7 @@ export const play = (infoMusicPlaying, setMaxDuration, dispatch, shuffle) => {
             notificationIcon: 'my_custom_icon',
             isLiveStream: true,
         })
-        
+
         MusicControl.enableControl('play', true)
         MusicControl.enableControl('pause', true)
         MusicControl.enableControl('nextTrack', true)
@@ -205,6 +208,27 @@ const ControlMusic = () => {
                     >{infoMusicPlaying?.name}</Text>
                 </TouchableOpacity>
                 <View style={styles.constainControl}>
+                    {/* <TouchableOpacity
+                        onPress={() => {
+                            if (infoMusicPlaying.like == 1) {
+                                dboMusic.ChangeStatus(infoMusicPlaying.id, 0).then((res: any) => {
+                                    dboMusic.SelectAll().then(res => {
+                                        dispatch(loadMusic(res))
+                                    })
+                                })
+                                dboMusic.DeleteMusicInFavourist(infoMusicPlaying.id)
+                            }
+                            else {
+                                dboMusic.ChangeStatus(infoMusicPlaying.id, 1).then((res: any) => {
+                                    dboMusic.SelectAll().then(res => {
+                                        dispatch(loadMusic(res))
+                                    })
+                                })
+                                dboMusic.MoveCollection(infoMusicPlaying.id, 2)
+                            }
+                        }}>
+                        {infoMusicPlaying.like == 1 ? <IconHeart /> : <IconHeartOutline />}
+                    </TouchableOpacity> */}
                     {soundTaskStatus ?
                         <TouchableOpacity
                             onPress={() => {
@@ -231,6 +255,7 @@ const ControlMusic = () => {
                         }}>
                         <IconSkipNext />
                     </TouchableOpacity>
+
                 </View>
             </View>
 
@@ -254,7 +279,7 @@ const styles = StyleSheet.create({
     },
     constainControl: {
         height: 38,
-        width: 70,
+        width: 80,
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
