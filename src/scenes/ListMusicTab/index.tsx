@@ -16,10 +16,24 @@ import { useNavigation } from '@react-navigation/native';
 import { PLAYMUSIC } from '@config/constrans';
 import { trans } from '@services/i18n';
 import Header from '@components/atoms/Header';
+import NativeAdmobView from '@services/modules/NativeAdmob';
 
-const renderItem = ({ item, index }) => (
-    <ItemMusic data={item} index={index} />
-);
+const renderItem = ({ item, index }) => {
+    if (index == 3) {
+        return (
+
+            <View>
+                <NativeAdmobView style={{ height: 100, marginTop: 10 }} />
+                <ItemMusic data={item} index={index} />
+            </View>
+        )
+    }
+    else {
+        return (
+            <ItemMusic data={item} index={index} />
+        )
+    }
+};
 
 const ListMusicTab = (props) => {
     const [showButtonDone, setShowButtonDone] = useState(false)
@@ -46,9 +60,9 @@ const ListMusicTab = (props) => {
         }
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(setCurrentIDCollectionSelect(1))
-    },[])
+    }, [])
 
     useEffect(() => {
         if (listEditMusic.length > 1) {
@@ -101,7 +115,7 @@ const ListMusicTab = (props) => {
                     dispatch(setEditMode(false))
                 }}
             /> */}
-              <Header
+            <Header
                 title={editMode ? (trans('edit_music', language)) : `List Music`}
                 paddingLeft={16}
                 buttonRight={showButtonRight}

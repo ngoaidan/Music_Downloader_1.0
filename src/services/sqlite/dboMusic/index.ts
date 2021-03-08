@@ -185,6 +185,40 @@ const ChangeStatus = (id: number, status: number) => {
 	})
 }
 
+const ChangeView = (id: number, view: number) => {
+	let query = 'UPDATE Music SET view = ? WHERE ID = ?;';
+	return new Promise((resolve, reject) => {
+		SQLite.openDatabase({ name: DATABASE_NAME })
+			.then((ref) => {
+				ref.executeSql(query, [view, id])
+					.then((res) => {
+						// ref.transaction((tx) => {
+						// 	tx.executeSql('SELECT * FROM Music WHERE ID = ?', [id])
+						// 		.then(([tx, result]) => {
+						// 			let data: any[] = []
+						// 			for (let i = 0; i < result.rows.length; i++) {
+						// 				let row = result.rows.item(i);
+						// 				data.push(row)
+						// 			}
+						// 			resolve(data)
+						// 		}).catch(err => {
+						// 			reject({ status: 500, error: "Error select database" })
+						// 		})
+						// }).catch(err => {
+						// 	reject({ status: 500, error: "Error select database" })
+						// })
+						resolve({ status: 200,data:res })
+					})
+					.catch(() => {
+						reject({ status: 500, error: "Error insert database" })
+					})
+			})
+			.catch(() => {
+				reject({ status: 500, error: "Error insert database" })
+			})
+	})
+}
+
 const SelectByID = (id:number) => {
 	return new Promise((resolve, reject) => {
 		SQLite.openDatabase({ name: DATABASE_NAME })
@@ -300,7 +334,8 @@ const dboMusic = {
 	DeleteItemByCollectionID,
 	ChangeStatus,
 	DeleteMusicInFavourist,
-	SelectByID
+	SelectByID,
+	ChangeView
 }
 
 export default dboMusic;

@@ -167,6 +167,7 @@ const ControlMusic = () => {
 
     useEffect(() => {
         play(infoMusicPlaying, setMaxDuration, dispatch, shuffle)
+        console.log("🚀 ~ file: index.tsx ~ line 187 ~ useEffect ~ infoMusicPlaying", infoMusicPlaying)
         setCurrentDuration(0)
         dispatch(setSoundStatus(true))
     }, [infoMusicPlaying])

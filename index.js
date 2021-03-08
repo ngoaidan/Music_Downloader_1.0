@@ -71,7 +71,7 @@ PushNotification.createChannel(
         channelDescription: "A channel to categorise your notifications",
         playSound: true,
         soundName: "default",
-        importance: 1,
+        importance: 4,
         vibrate: true,
     },
     (created) => console.log(`createChannel returned '${created}'`)
