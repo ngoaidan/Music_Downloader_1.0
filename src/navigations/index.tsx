@@ -11,17 +11,11 @@ import { dboCollection, dboMusic } from '@services/sqlite';
 import { useDispatch } from 'react-redux';
 import { loadCollection, loadMusic, loadSettings } from '@services/redux/actions';
 import storage from '@config/initStorage';
-import {
-    AdMobInterstitial,
-} from 'react-native-admob'
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-
 const StackCollection = createStackNavigator();
-const StackHome = createStackNavigator();
-
 import DeviceInfo from 'react-native-device-info';
 import { Alert } from 'react-native';
 
@@ -38,34 +32,21 @@ const CollectionStack = () => {
                     gestureDirection: 'horizontal',
                 }}
             ></StackCollection.Screen>
-            <StackCollection.Screen
-
+            {/* <StackCollection.Screen
                 name={PLAYMUSIC}
                 component={PlayMusic}
                 options={{
                     gestureEnabled: true,
                     gestureDirection: 'horizontal'
-                }} ></StackCollection.Screen>
+                }} ></StackCollection.Screen> */}
         </StackCollection.Navigator>
     )
 }
 
-const HomeStack = () => {
-    return (
-        <StackHome.Navigator initialRouteName={HOME} headerMode="none" >
-            <StackHome.Screen name={HOME} component={Home} ></StackHome.Screen>
-            <StackHome.Screen name={SETTINGS} component={Settings} options={{
-                gestureEnabled: true,
-                gestureDirection: 'horizontal',
-                animationEnabled: false,
-            }} ></StackHome.Screen>
-        </StackHome.Navigator>
-    )
-}
 const TabStack = () => {
     return (
         <Tab.Navigator tabBar={(props: any) => <CustomTabBar {...props} />}>
-            <Tab.Screen name={HOME} component={HomeStack} ></Tab.Screen>
+            <Tab.Screen name={HOME} component={Home} ></Tab.Screen>
             <Tab.Screen name={LISTCOLLECTIONTAB} component={ListMusicTab}></Tab.Screen>
             <Tab.Screen name={COLLECTIONSTACK} component={CollectionStack}></Tab.Screen>
         </Tab.Navigator>
@@ -75,12 +56,6 @@ const TabStack = () => {
 const Navigator = () => {
     const [firstLoad, setFirstLoad] = useState<any>(null);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712');
-        AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
-        AdMobInterstitial.requestAd().then();
-    }, [])
 
     useEffect(() => {
         storage
@@ -179,15 +154,21 @@ const Navigator = () => {
 
                     }}>
                     <Stack.Screen name={TABNAVIGATION} component={TabStack}></Stack.Screen>
-
-                    <StackCollection.Screen
+                    <Stack.Screen name={SETTINGS} component={Settings} options={{
+                        gestureEnabled: true,
+                        gestureDirection: 'horizontal',
+                        animationEnabled: false
+                    }} ></Stack.Screen>
+                    <Stack.Screen
                         name={PLAYMUSIC}
                         component={PlayMusic}
                         options={{
                             gestureEnabled: true,
                             gestureDirection: 'horizontal',
                             animationEnabled: false
-                        }} ></StackCollection.Screen>
+                        }}
+
+                    ></Stack.Screen>
                 </Stack.Navigator>
             </NavigationContainer>
         )

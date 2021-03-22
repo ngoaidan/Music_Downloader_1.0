@@ -58,9 +58,9 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                                 break
                             }
     
-                            // default: icon = <IconDownArrow
-                            //     background={isFocused ? color.BG_ICON_TAB : color.BG_BUTTON}
-                            //     color={isFocused ? color.IC_FOCUS : color.IC_DISABLE} />
+                            default: icon = <IconDownArrow
+                                background={isFocused ? color.BG_ICON_TAB : color.BG_BUTTON}
+                                color={isFocused ? color.IC_FOCUS : color.IC_DISABLE} />
                         }
     
                         const onPress = () => {

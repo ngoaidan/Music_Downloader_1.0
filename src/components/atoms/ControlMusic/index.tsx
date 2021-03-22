@@ -17,11 +17,8 @@ import { PLAYMUSIC } from '@config/constrans';
 import IconHeart from '@assets/svg/heart';
 import { dboMusic } from '@services/sqlite';
 import IconHeartOutline from '@assets/svg/heartOutline';
-import {
-    AdMobInterstitial,
-} from 'react-native-admob'
 
-export var soundTask : any;
+var soundTask;
 var repeat;
 var musicPlaying;
 
@@ -170,6 +167,7 @@ const ControlMusic = () => {
 
     useEffect(() => {
         play(infoMusicPlaying, setMaxDuration, dispatch, shuffle)
+        console.log("🚀 ~ file: index.tsx ~ line 187 ~ useEffect ~ infoMusicPlaying", infoMusicPlaying)
         setCurrentDuration(0)
         dispatch(setSoundStatus(true))
     }, [infoMusicPlaying])
@@ -195,7 +193,6 @@ const ControlMusic = () => {
                 <TouchableOpacity
                     style={{ height: 32, flexDirection: 'row', alignItems: 'center', flex: 1 }}
                     onPress={() => {
-                        AdMobInterstitial.showAd();
                         navigation.navigate(PLAYMUSIC, {});
                     }}
                 >
