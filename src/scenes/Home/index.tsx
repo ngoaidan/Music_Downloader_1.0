@@ -54,7 +54,7 @@ const Home = () => {
         //     }
         // })
 
-        fetch(`https://youtube-v31.p.rapidapi.com/search?q=Music ${term}&part=snippet%2Cid&regionCode=VI&maxResults=10&order=viewCount`, {
+        fetch(`https://youtube-v31.p.rapidapi.com/search?q=Music ${term}&part=snippet%2Cid&regionCode=US&maxResults=10&order=viewCount`, {
             "method": "GET",
             "headers": {
                 "x-rapidapi-key": "2988ec4b08msh644ff6b330e76a2p111d4bjsn42dfb81245b0",

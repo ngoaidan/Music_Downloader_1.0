@@ -18,9 +18,7 @@ const Header3 = (props: any) => {
     const [statusLike, setStatusLike] = useState(0)
     const infoMusicPlaying = useSelector((state: any) => state?.infoMusicPlaying)
 
-
     useEffect(() => {
-        console.log("🚀 ~ file: index.tsx ~ line 26 ~ Header3 ~ infoMusicPlaying", infoMusicPlaying)
         setStatusLike(props.infoMusicPlaying.like)
     }, [infoMusicPlaying])
 

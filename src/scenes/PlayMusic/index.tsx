@@ -10,15 +10,15 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import MusicControl, { Command } from 'react-native-music-control';
 import Sound from 'react-native-sound';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadMusic, setListMusciPlaying, setRepeat, setShuffle, setSound, setSoundStatus, showMusicControl } from '@services/redux/actions';
+import {  setListMusciPlaying, setRepeat, setShuffle, setSoundStatus, showMusicControl, showTabbar } from '@services/redux/actions';
 import ItemMusicInPlayMusic from '@components/atoms/ItemMusicInPlayMusic';
 import { ImageMusicDefault } from '@assets/images';
-import { play, pause, resume, next, previous } from '@components/atoms/ControlMusic'
+import {  pause, resume, next, previous } from '@components/atoms/ControlMusic'
 import IconRepeatOne from '@assets/svg/repeat1';
-import { BackHandler } from 'react-native';
-import { dboMusic } from '@services/sqlite';
-import IconHeart from '@assets/svg/heart';
-import IconHeartOutline from '@assets/svg/heartOutline';
+import ControlMusic from"@components/atoms/ControlMusic"
+import {
+    AdMobInterstitial,
+} from 'react-native-admob'
 
 const renderItem = ({ item, index }) => (
     <ItemMusicInPlayMusic data={item} index={index} />
@@ -34,6 +34,14 @@ const PlayMusic = () => {
     const [listDataShow, setListDataShow] = useState<any[]>([])
     const musicPlaying = useSelector((state: any) => state?.musicPlaying)
     const repeat = useSelector((state: any) => state?.repeat)
+    const [currentDuration, setCurrentDuration] = useState(0);
+    const [maxDuration, setMaxDuration] = useState(1);
+
+    useEffect(() => {
+        AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712');
+        AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
+        AdMobInterstitial.requestAd().then();
+    }, [])
 
     useEffect(() => {
         let data: any[] = []
@@ -51,9 +59,11 @@ const PlayMusic = () => {
         setListDataShow(data)
     }, [])
 
+
     return (
         <View style={[stylesGeneral.container, { alignItems: 'center', flexDirection: 'column' }]}>
             <Header3 infoMusicPlaying={infoMusicPlaying} />
+          
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, padding: 16 }}>
                 <View style={{ backgroundColor: 'yellow', height: 100, width: 100, marginLeft: 8, borderRadius: 12 }}>
                     <Image
@@ -98,11 +108,25 @@ const PlayMusic = () => {
                         {statusLike == 1 ? <IconHeart /> : <IconHeartOutline />}
                     </TouchableOpacity> */}
                 </View>
-
             </View>
 
 
             <View style={[styles.constainControl]}>
+                {/* <View style={[styles.constainProcessBar]}>
+                    <Slider
+                        style={{ width: metric.DEVICE_WIDTH, padding: 0 }}
+                        minimumValue={0}
+                        maximumValue={maxDuration}
+                        minimumTrackTintColor={color.SEEKBAR}
+                        maximumTrackTintColor="#56585b"
+                        thumbTintColor={color.SEEKBAR}
+                        value={currentDuration}
+                        onValueChange={(value) => {
+                            if (soundTask != undefined)
+                                soundTask.setCurrentTime(value)
+                        }}
+                    />
+                </View> */}
                 <TouchableOpacity onPress={() => {
                     if (shuffle) dispatch(setShuffle(false))
                     else {
